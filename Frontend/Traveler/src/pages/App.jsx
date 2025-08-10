@@ -58,7 +58,8 @@ export default function App() {
         <Route path="/UserTrips" element={<UserTrips />} />
         <Route path="/login" element={<Login />} />
 
-
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/user-trips" element={<UserTrips />} />
       </Routes>
     </Router>
   );
