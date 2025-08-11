@@ -1,8 +1,12 @@
 const express = require("express");
-const { Client } = require("pg");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
 const app = express();
 const port = 3000;
-const cors = require("cors");
+
+
+// CORS setup
 app.use(
   cors({
     origin: "http://localhost:3001",
@@ -10,103 +14,122 @@ app.use(
   })
 );
 
-const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "postgres",
-  password: "5qZ3uV5g",
-  port: 5432,
-});
-
-client.connect();
-client.query("SELECT NOW()", (err, result) => {
-  if (err) {
-    console.error("Error connecting to database:", err);
-  } else {
-    console.log("Database connected successfully:", result.rows);
-  }
-});
 app.use(express.json());
-createTables();
 
+// Connect to MongoDB (local)
+mongoose.connect("mongodb://localhost:27017/travel_app", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connected");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+// ==== Mongoose Models ====
+const { Schema, model } = mongoose;
+
+const userSchema = new Schema({
+  name: String,
+  phone_number: String,
+  email: String,
+  password: String,
+  address: String,
+  is_admin: Boolean,
+});
+
+const tripSchema = new Schema({
+  name: String,
+  description: String,
+  admin_id: { type: Schema.Types.ObjectId, ref: "User" },
+  max_tickets: Number,
+  price: Number,
+});
+
+const userTripSchema = new Schema({
+  user_id: { type: Schema.Types.ObjectId, ref: "User" },
+  trip_id: { type: Schema.Types.ObjectId, ref: "Trip" },
+});
+
+const User = model("User", userSchema);
+const Trip = model("Trip", tripSchema);
+const UserTrip = model("UserTrip", userTripSchema);
+
+// ==== Routes ====
+
+// POST /user - Create user
 app.post("/user", async (req, res) => {
-  const { id,
-    name,
-    phone_number,
-    email,
-    password,
-    is_admin } = req.body;
-  const query = `
-    INSERT INTO users (id, name, phone_number, email, password, is_admin)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *
-    `;
-  client.query(
-    query,
-    [id, name, phone_number, email, password, is_admin],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Server error");
-      } else {
-        res.status(201).json(result.rows[0]);
-      }
-    }
-  );
-});
-
-app.get("/user", (req, res) => {
-  const query = "SELECT * FROM users";
-  client.query(query, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Server error");
-    } else {
-      res.status(200).json(result.rows);
-    }
-  });
-});
-
-
-
-async function createTables() {
   try {
-    await client.query(`
-  CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    phone_number VARCHAR(20),
-    email VARCHAR(100),
-    password VARCHAR(100),
-    is_admin BOOLEAN
-  );
-`);
-
-    await client.query(`
-  CREATE TABLE IF NOT EXISTS trips (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    description VARCHAR(100),
-    admin_id INTEGER REFERENCES users(id),
-    max_tickets INTEGER,
-    price NUMERIC
-  );
-`);
-
-    await client.query(`
-  CREATE TABLE IF NOT EXISTS user_trips (
-    user_id INTEGER REFERENCES users(id),
-    trip_id INTEGER REFERENCES trips(id),
-    PRIMARY KEY (user_id, trip_id)
-  );
-`);
-
-    console.log("Tables ensured.");
+    const user = await User.create(req.body);
+    res.status(201).json(user);
   } catch (err) {
-    console.error("Error creating tables:", err);
+    console.error(err);
+    res.status(500).send("Server error");
   }
-}
+});
 
+// GET /user - Get all users
+app.get("/user", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// POST /trip - Create trip
+app.post("/trip", async (req, res) => {
+  try {
+    const trip = await Trip.create(req.body);
+    res.status(201).json(trip);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// GET /trip - Get all trips
+app.get("/trip", async (req, res) => {
+  try {
+    const trips = await Trip.find().populate("admin_id", "name email");
+    res.status(200).json(trips);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// POST /user-trip - Link user to trip
+app.post("/user-trip", async (req, res) => {
+  try {
+    const userTrip = await UserTrip.create(req.body);
+    res.status(201).json(userTrip);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// GET /user-trip - List user-trip relations
+app.get("/user-trip", async (req, res) => {
+  try {
+    const result = await UserTrip.find()
+      .populate("user_id", "name email")
+      .populate("trip_id", "name description");
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// ==== Start Server ====
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
