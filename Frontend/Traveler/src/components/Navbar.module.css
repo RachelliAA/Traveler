@@ -1,0 +1,63 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+}
+
+.companyName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #3b82f6;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #2563eb;
+}
+
+.logout {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.logout:hover {
+  background-color: #dc2626;
+}
