@@ -107,6 +107,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import classes from "./Login.module.css";
+import { loginUser } from "../api/usersApi";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -122,33 +123,24 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
-    //try {
-    //   const response = await fetch(
-    //     `http://localhost:3000/users?username=${username}`
-    //   );
-    //   if (!response.ok) throw new Error("Failed to fetch");
+    try {
+      const user = await loginUser(username, password);
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
 
-    //   const data = await response.json();
-    //   const user = data[0];
-
-    //   // Check password and role match (assuming user.role exists)
-    //   if (user) {
-    //     localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-        // Redirect based on role
-        if (role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/user-trips");
-        }
-    //   } else {
-    //     setError("Incorrect username, password, or role");
-    //   }
-    // } catch (err) {
-    //   setError("Server error");
-    // }
+      if (user.is_admin) {
+        navigate("/admin");
+      } else {
+        navigate("/user-trips");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
+
+
 
   return (
     <div className={classes.body}>

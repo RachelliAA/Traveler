@@ -6,14 +6,15 @@ export default function Navbar({ onLogout, user }) {
 
   const handleLogout = () => {
     if (onLogout) onLogout();
-    navigate("/rootpage"); // or wherever your login page is
+    localStorage.removeItem("loggedInUser");
+    navigate("/rootpage"); 
   };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.left}>
         <img
-          src="/logo.png" // put your logo file in /public
+          src="/logo.png" 
           alt="Company Logo"
           className={styles.logo}
         />

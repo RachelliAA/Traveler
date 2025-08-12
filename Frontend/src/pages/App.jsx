@@ -52,7 +52,7 @@ export default function App() {
       <Navbar user={mockAdmin} onLogout={handleLogout} />
       <Routes>
         <Route path="/rootpage" element={<RootPage />} />
-        <Route path="/" element={<AdminDashboard user={mockAdmin} />} />
+        <Route path="/" element={<RootPage/>} />
         <Route path="/trip/:tripId" element={<TripDetails />} />
         <Route path="/profile" element={<div>Profile Page</div>} />
         <Route path="/UserTrips" element={<UserTrips />} />
