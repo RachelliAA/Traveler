@@ -33,12 +33,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
 import TripDetails from "./TripDetails";
-
 import Navbar from "../components/Navbar";
 import UserTrips from "./UserTrips";
-
 import Login from "./Login";
+import Register from "./Register"; // Ensure this is the correct import path for Register
 import RootPage from "./RootPage"; 
+
+
 export default function App() {
   const mockAdmin = { id: "1", name: "Admin", role: "admin" };
 
@@ -57,7 +58,7 @@ export default function App() {
         <Route path="/profile" element={<div>Profile Page</div>} />
         <Route path="/UserTrips" element={<UserTrips />} />
         <Route path="/login" element={<Login />} />
-
+        <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/user-trips" element={<UserTrips />} />
       </Routes>
