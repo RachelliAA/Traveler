@@ -36,7 +36,7 @@ import TripDetails from "./TripDetails";
 import Navbar from "../components/Navbar";
 import UserTrips from "./UserTrips";
 import Login from "./Login";
-import Register from "./Register"; // Ensure this is the correct import path for Register
+import Register from "./Register"; 
 import RootPage from "./RootPage"; 
 
 

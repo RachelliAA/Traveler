@@ -1,19 +1,33 @@
-import { Link } from "react-router-dom";
-import styles from "./TripList.module.css";
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from "@mui/material";
 
-export default function TripList({ trips }) {
+export default function TripList({ trips, onSelectTrip }) {
   return (
-    <div>
-      <h2>Planned Trips</h2>
-      <ul className={styles.list}>
-        {trips.map(trip => (
-          <li key={trip.id} className={styles.item}>
-            <Link className={styles.link} to={`/trip/${trip.id}`}>
-              <strong>{trip.title}</strong> — {trip.date}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Available Tickets</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {trips.map((trip) => (
+            <TableRow
+              key={trip._id}
+              hover
+              onClick={() => onSelectTrip(trip)}
+              style={{ cursor: "pointer" }}
+            >
+              <TableCell>{trip.name}</TableCell>
+              <TableCell>{trip.location}</TableCell>
+              <TableCell>${trip.price}</TableCell>
+              <TableCell>{trip.available_tickets}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
