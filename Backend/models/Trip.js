@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 const tripSchema = new Schema({
     name: String,
     description: String,
@@ -16,3 +19,6 @@ const tripSchema = new Schema({
     travelers: [{ type: Schema.Types.ObjectId, ref: "User" }],
     is_active: { type: Boolean, default: true },
 }, { timestamps: true });
+
+
+module.exports = mongoose.model('Trip', tripSchema, 'trips');

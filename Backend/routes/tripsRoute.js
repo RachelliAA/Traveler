@@ -22,6 +22,18 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+// // POST /trips
+// router.post("/", async (req, res) => {
+//   try {
+//     const trip = new Trip(req.body); // req.body.images is an array of URLs
+//     await trip.save();
+//     res.status(201).json(trip);
+//   } catch (err) {
+//     res.status(400).json({ error: err.message });
+//   }
+// });
+
 // PUT update trip by id
 router.put('/:id', async (req, res) => {
   try {

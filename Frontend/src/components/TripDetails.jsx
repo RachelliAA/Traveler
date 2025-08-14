@@ -79,6 +79,29 @@ export default function TripDetails({ trip, onEditTrip, onBack, onDeleteTrip }) 
             Delete
           </Button>
         </Box>
+        <Divider sx={{ my: 2 }} />
+
+        <Typography variant="h6">Images</Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1 }}>
+          {trip.images && trip.images.length > 0 ? (
+            trip.images.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Trip image ${index + 1}`}
+                style={{
+                  width: 150,
+                  height: 100,
+                  objectFit: "cover",
+                  borderRadius: 4
+                }}
+              />
+            ))
+          ) : (
+            <Typography variant="body2">No images available</Typography>
+          )}
+        </Box>
+
 
         <Divider sx={{ my: 2 }} />
 
