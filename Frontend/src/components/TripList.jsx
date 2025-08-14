@@ -8,6 +8,7 @@ export default function TripList({ trips, onSelectTrip }) {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Location</TableCell>
+            <TableCell>Start Date</TableCell>
             <TableCell>Price</TableCell>
             <TableCell>Available Tickets</TableCell>
           </TableRow>
@@ -22,6 +23,9 @@ export default function TripList({ trips, onSelectTrip }) {
             >
               <TableCell>{trip.name}</TableCell>
               <TableCell>{trip.location}</TableCell>
+              <TableCell>
+                {trip.start_date ? new Date(trip.start_date).toLocaleDateString() : ""}
+              </TableCell>
               <TableCell>${trip.price}</TableCell>
               <TableCell>{trip.available_tickets}</TableCell>
             </TableRow>

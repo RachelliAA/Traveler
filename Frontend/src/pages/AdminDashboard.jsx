@@ -3,8 +3,8 @@ import { Container, Typography, Button, Box, CircularProgress, Alert } from "@mu
 import TripList from "../components/TripList";
 import TripDetails from "../components/TripDetails";
 import TripForm from "../components/TripForm";
-import { fetchTrips, addTrip, updateTrip } from "../api/tripsApi";
-import { deleteTrip } from "../api/tripsApi"; // make sure you have this in your API
+import TripFilters from "../components/TripFilters";
+import { fetchTrips, addTrip, updateTrip, deleteTrip } from "../api/tripsApi";
 
 export default function AdminDashboard({ user }) {
   const [trips, setTrips] = useState([]);
@@ -12,6 +12,11 @@ export default function AdminDashboard({ user }) {
   const [mode, setMode] = useState("list"); // "list" | "details" | "add" | "edit"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Filters
+  const [filterText, setFilterText] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [availableTickets, setAvailableTickets] = useState(0);
 
   useEffect(() => {
     loadTrips();
@@ -28,8 +33,6 @@ export default function AdminDashboard({ user }) {
       setLoading(false);
     }
   }
-
-  
 
   async function handleDeleteTrip(tripId) {
     await deleteTrip(tripId);
@@ -52,6 +55,23 @@ export default function AdminDashboard({ user }) {
     setMode("details");
   }
 
+  // Apply filters
+  const filteredTrips = trips
+    .filter((trip) => {
+      const matchesText =
+        trip.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        (trip.description?.toLowerCase().includes(filterText.toLowerCase()) ?? false);
+
+      const matchesDate = startDate
+        ? new Date(trip.start_date) >= new Date(startDate)
+        : true;
+
+      const matchesTickets = trip.available_tickets >= availableTickets;
+
+      return matchesText && matchesDate && matchesTickets;
+    })
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date)); // default sort by start date
+
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -63,15 +83,28 @@ export default function AdminDashboard({ user }) {
 
       {!loading && mode === "list" && (
         <>
+          <TripFilters
+            filterText={filterText}
+            setFilterText={setFilterText}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            availableTickets={availableTickets}
+            setAvailableTickets={setAvailableTickets}
+          />
+
           <Box textAlign="right" mb={2}>
             <Button variant="contained" onClick={() => setMode("add")}>
               Add New Trip
             </Button>
           </Box>
-          <TripList trips={trips} onSelectTrip={(trip) => {
-            setSelectedTrip(trip);
-            setMode("details");
-          }} />
+
+          <TripList
+            trips={filteredTrips}
+            onSelectTrip={(trip) => {
+              setSelectedTrip(trip);
+              setMode("details");
+            }}
+          />
         </>
       )}
 
@@ -82,7 +115,6 @@ export default function AdminDashboard({ user }) {
           onBack={() => setMode("list")}
           onDeleteTrip={handleDeleteTrip}
         />
-
       )}
 
       {mode === "add" && (
