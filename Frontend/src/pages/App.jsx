@@ -42,7 +42,7 @@ import RootPage from "./RootPage";
 
 export default function App() {
   const mockAdmin = { id: "1", name: "Admin", role: "admin" };
-
+  const storedUser = JSON.parse(localStorage.getItem("loggedInUser")) || mockAdmin;
   const handleLogout = () => {
     console.log("Logged out");
     // You can also clear auth state here
@@ -59,7 +59,7 @@ export default function App() {
         <Route path="/UserTrips" element={<UserTrips />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard user={storedUser}/>} />
         <Route path="/user-trips" element={<UserTrips />} />
       </Routes>
     </Router>
