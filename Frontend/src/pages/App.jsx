@@ -33,7 +33,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
 import TripDetails from "./TripDetails";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import UserTrips from "./UserTrips";
 import Login from "./Login";
 import Register from "./Register"; 
@@ -50,7 +50,7 @@ export default function App() {
 
   return (
     <Router>
-      <Navbar user={mockAdmin} onLogout={handleLogout} />
+      {/* <Navbar user={mockAdmin} onLogout={handleLogout} /> */}
       <Routes>
         <Route path="/rootpage" element={<RootPage />} />
         <Route path="/" element={<RootPage/>} />
