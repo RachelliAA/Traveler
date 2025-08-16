@@ -22,26 +22,25 @@ router.post('/', async (req, res) => {
   }
 });
 
-// // PUT update user by id
-// router.put('/:id', async (req, res) => {
+// // GET trips by admin_id
+// router.get('/user/:id', async (req, res) => {
 //   try {
-//     const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-//     if (!updated) return res.status(404).json({ message: "User not found" });
-//     res.json(updated);
+//     const trips = await UserTrip.find({ user_id: req.params.id })
+//       .populate('user_id')
+//       .sort({ createdAt: -1 });
+
+//     if (!trips.length) {
+//       return res.status(404).json({ error: 'No trips found for this user' });
+//     }
+
+//     res.json(trips);
 //   } catch (err) {
-//     res.status(400).json({ error: err.message });
+//     res.status(500).json({ error: err.message });
 //   }
 // });
 
-// // DELETE user by id
-// router.delete('/:id', async (req, res) => {
-//   try {
-//     await User.findByIdAndDelete(req.params.id);
-//     res.json({ message: "User deleted" });
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
+
+
 
 
 

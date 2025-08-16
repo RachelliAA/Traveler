@@ -1,5 +1,4 @@
 import {
-
   Typography,
   Button,
   Container,
@@ -7,34 +6,48 @@ import {
   Card,
   CardMedia,
   Grid,
+  TextField,
 } from "@mui/material";
 import Navbar from "../components/Navbar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { addUserToTrip } from "../api/UserTripApi";
-import { useNavigate } from "react-router-dom";
+
 export default function TripDetails({ onProfileClick }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { trip, user } = location.state || {};
+  
+  const [tickets, setTickets] = useState(1);
 
-const location = useLocation();
-  const { trip, user } = location.state || {}; // <-- access inside `state`
-const onRegister=async ()=>{
-  const userTrip={
-    trip_is: trip._id,
-    user_id: user._id
-  }
-  await addUserToTrip(userTrip);
-  navigate("/user-trips")
-}
-
+  const onRegister = async () => {
+    const userTrip = {
+      trip_id: trip._id,
+      user_id: user._id,
+      number_of_tickets: tickets,
+    };
+    await addUserToTrip(userTrip, trip);
+    navigate("/user-trips");
+  };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", width: "100%", overflowX: "hidden" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        width: "100%",
+        overflowX: "hidden",
+      }}
+    >
       {/* Header */}
-        <Navbar onProfileClick={onProfileClick} user={user}></Navbar>
-   
+      <Navbar onProfileClick={onProfileClick} user={user} />
 
       {/* Trip Info */}
-      <Container disableGutters maxWidth="md" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
+      <Container
+        disableGutters
+        maxWidth="md"
+        sx={{ py: 3, px: { xs: 2, sm: 3 } }}
+      >
         <Typography variant="h4" sx={{ mb: 2 }}>
           {trip.name}
         </Typography>
@@ -62,22 +75,43 @@ const onRegister=async ()=>{
             {trip.images.map((img, index) => (
               <Grid key={index} item xs={12} sm={6}>
                 <Card>
-                  <CardMedia component="img" image={img} alt={`Trip image ${index + 1}`} />
+                  <CardMedia
+                    component="img"
+                    image={img}
+                    alt={`Trip image ${index + 1}`}
+                  />
                 </Card>
               </Grid>
             ))}
           </Grid>
         )}
 
-        {/* Register Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => onRegister()}
-        >
-          Sign up
-        </Button>
+        {/* Tickets Selection + Register Button */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <TextField
+            label="Tickets"
+            type="number"
+            value={tickets}
+            onChange={(e) => {
+              let val = Math.max(1, Math.min(trip.available_tickets, Number(e.target.value)));
+              setTickets(val);
+            }}
+            inputProps={{
+              min: 1,
+              max: trip.available_tickets,
+            }}
+            sx={{ width: "120px" }}
+          />
+
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={onRegister}
+          >
+            Sign up
+          </Button>
+        </Box>
       </Container>
     </Box>
   );
@@ -85,12 +119,13 @@ const onRegister=async ()=>{
 
 //todo
 /***
- * sign up to trip fix!!!!!!!!!!!1
  * make trip details nice
  * figure out the images
- * 
+ * my trips all trips
+ * allow changing trip order
  */
 //questions
 /**
  * when loading trips do you load them with all their info?
+ * 
  */

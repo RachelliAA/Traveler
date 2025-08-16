@@ -36,7 +36,7 @@ export default function MUITripsPage({
       const fetchedTrips = await fetchTrips();
       setTrips(fetchedTrips);
       console.log(fetchedTrips);
-      const fetchedMyTrips = await fetchTrips(); // if you have this too
+      const fetchedMyTrips = await fetchTrips();
       setMyTrips(fetchedMyTrips);
     }
     loadTrips();
