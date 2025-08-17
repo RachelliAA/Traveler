@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { fetchTrips } from "../api/tripsApi";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { fetchTripsofUser } from "../api/UserTripApi";
 export default function MUITripsPage({
   onTripClick,
   onLogout = () => console.log("Logout clicked"),
@@ -36,7 +37,7 @@ export default function MUITripsPage({
       const fetchedTrips = await fetchTrips();
       setTrips(fetchedTrips);
       console.log(fetchedTrips);
-      const fetchedMyTrips = await fetchTrips();
+      const fetchedMyTrips = await fetchTripsofUser(user._id);
       setMyTrips(fetchedMyTrips);
     }
     loadTrips();

@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost:5000/api/userTrips';
 //const tripsUrl
-import { updateTrip } from "./tripsApi";
+import { updateTrip, fetchTripById } from "./tripsApi";
 export async function addUserToTrip(userTrip, trip) {
   const res = await fetch(BASE_URL, {
     method: 'POST',
@@ -16,12 +16,26 @@ export async function addUserToTrip(userTrip, trip) {
   const res2 = await updateTrip(newTrip._id, newTrip)
   return res.json();
 }
-export async function fetchUserTripsofUser(id) {
-
-
-  const res = await fetch(`${BASE_URL}/user/${id}`);
-  if (!res.ok) throw new Error("Failed to fetch trips of this user");
-  //now i have all the trip ids of this user, for each one get its full trip, add it to the list
+async function fetchUserTripsofUser(user_id){
+    const res = await fetch(`${BASE_URL}/user/${user_id}`);
+  if (!res.ok) throw new Error('Failed to fetch user trips');
   return res.json();
+}
+
+
+
+
+export async function fetchTripsofUser(id) {
+  const userTrips = await fetchUserTripsofUser(id)
+  //now i have all the trip ids of this user, for each one get its full trip, add it to the list
+  const trips = await Promise.all(
+  userTrips.map(ut =>
+        fetchTripById(ut._trip_id)
+    )
+  );
+  return trips;
+
+  
+  //query to fetch all userTrips by user
 
 }

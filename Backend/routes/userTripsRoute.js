@@ -22,6 +22,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const userTrips = await UserTrip.find({ user_id: user_id }).sort({ createdAt: -1 });
+    res.json(userTrips);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // // GET trips by admin_id
 // router.get('/user/:id', async (req, res) => {
 //   try {
