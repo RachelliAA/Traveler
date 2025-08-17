@@ -120,9 +120,13 @@ export default function TripDetails({ onProfileClick }) {
 //todo
 /***
  * make trip details nice
- * figure out the images
+ * make front page nice
  * my trips all trips
  * allow changing trip order
+ * allow deleting trip order
+ * disabling if available tickets are 0
+ * load at scroll....
+ * 
  */
 //questions
 /**

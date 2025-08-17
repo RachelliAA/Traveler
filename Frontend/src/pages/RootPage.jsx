@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./RootPage.module.css";
+import { Box, Typography, Button, Stack } from "@mui/material";
 
 export default function RootPage() {
   const navigate = useNavigate();
 
   // Images for the background slideshow
-  const images = [
-    "hike1.jpeg",
-    "hike2.jpeg",
-    "hike1.jpeg",
-  ];
+  const images = ["hike1.jpeg", "hike2.jpeg", "hike1.jpeg"];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -23,27 +19,64 @@ export default function RootPage() {
   }, [images.length]);
 
   return (
-    <div
-      className={styles.root}
-      style={{ backgroundImage: `url(${images[currentIndex]})` }}
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100%",
+        backgroundImage: `url(${images[currentIndex]})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        transition: "background-image 1s ease-in-out",
+      }}
     >
-      <div className={styles.overlay}>
-        <h1 className={styles.logo}>Traveler Co.</h1>
-        <div className={styles.buttonGroup}>
-          <button
-            className={styles.optionButton}
+      {/* Dark overlay */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      />
+
+      {/* Content */}
+      <Box
+        sx={{
+          position: "relative",
+          textAlign: "center",
+          color: "white",
+          zIndex: 1,
+        }}
+      >
+        <Typography variant="h2" fontWeight="bold" gutterBottom>
+          Traveler Co.
+        </Typography>
+
+        <Stack spacing={2} direction="column" alignItems="center">
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
             onClick={() => navigate("/login?role=traveler")}
+            sx={{ minWidth: 200, borderRadius: 2 }}
           >
             Login as Traveler
-          </button>
-          <button
-            className={styles.optionButton}
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
             onClick={() => navigate("/login?role=admin")}
+            sx={{ minWidth: 200, borderRadius: 2, color: "white", borderColor: "white" }}
           >
             Login as Admin
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Stack>
+      </Box>
+    </Box>
   );
 }
