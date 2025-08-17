@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserTrip = require('../models/UserTrip');
+
 // // GET all users
 // router.get('/', async (req, res) => {
 //   try {
@@ -49,11 +50,5 @@ router.get('/user/:user_id', async (req, res) => {
 //     res.status(500).json({ error: err.message });
 //   }
 // });
-
-
-
-
-
-
 
 module.exports = router;
