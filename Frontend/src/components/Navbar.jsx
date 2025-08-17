@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+
+
 export default function Navbar({  onProfileClick, user }) {
   const navigate = useNavigate();
 console.log("user!!!!!!!!!",user)

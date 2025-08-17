@@ -1,6 +1,8 @@
 const BASE_URL = 'http://localhost:5000/api/userTrips';
 //const tripsUrl
 import { updateTrip, fetchTripById } from "./tripsApi";
+
+
 export async function addUserToTrip(userTrip, trip) {
   const res = await fetch(BASE_URL, {
     method: 'POST',
@@ -39,3 +41,12 @@ export async function fetchTripsofUser(id) {
   //query to fetch all userTrips by user
 
 }
+
+//const BASE_URL = 'http://localhost:5000/api/userTrips';
+
+export async function fetchTravelersOfTrip(tripId) {
+  const res = await fetch(`${BASE_URL}/trip/${tripId}`);
+  if (!res.ok) throw new Error("Failed to fetch travelers for trip");
+  return res.json();
+}
+
