@@ -11,6 +11,22 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const trip = await Trip.findOne({ _id: ObjectId(id) })   // if your field is actually "_id"
+      .populate('admin_id');
+
+    if (!trip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    res.json(trip);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // POST new trip
 router.post('/', async (req, res) => {
