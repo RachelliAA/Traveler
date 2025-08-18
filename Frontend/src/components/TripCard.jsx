@@ -9,43 +9,55 @@ import {
 
 export default function TripCard({ trip, onTripClick }) {
   return (
-    <Card
-    
+ <Card
+  sx={{
+    borderRadius: 2,
+    boxShadow: 3,
+    display: "flex",
+    flexDirection: "column",
+    height: 280, // total card height
+  }}
+  onClick={onTripClick}
+>
+  {/* Image container: slightly taller */}
+<Box
+  sx={{
+    height: 180,
+    width: "100%",
+    overflow: "hidden",
+    backgroundColor: trip.images?.length ? "transparent" : "#ccc", // fallback color
+  }}
+>
+  {trip.images?.length ? (
+    <CardMedia
+      component="img"
+      image={trip.images[0]}
+      alt={trip.name}
+      
       sx={{
-        borderRadius: 2,
-        boxShadow: 3,
-        height: 280, // fixed card height
-        display: "flex",
-        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block",
       }}
-    >
-      <CardActionArea sx={{ flexGrow: 1 }}>
-        {/* Image */}
-        <Box sx={{ height: 140, overflow: "hidden" }}>
-          <CardMedia
-          onClick={onTripClick}
-            component="img"
-            image={trip.images[0]}
-            alt={trip.name}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
+    />
+  ) : null}
+</Box>
 
-        {/* Text */}
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography variant="h6" component="div" noWrap>
-            {trip.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Price: ${trip.price}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+
+  {/* Text content: add top padding to move text slightly lower */}
+  <CardContent sx={{ flexGrow: 1, overflow: "hidden", pt: 4 }}>
+    <Typography variant="h6" component="div" noWrap>
+      {trip.name}
+    </Typography>
+    <Typography variant="body2" color="text.secondary">
+      Price: ${trip.price}
+    </Typography>
+  </CardContent>
+</Card>
+
+
+
   );
 }
 
