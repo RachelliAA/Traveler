@@ -106,7 +106,9 @@ export default function TripDetails({ trip, onEditTrip, onBack, onDeleteTrip }) 
         <Divider sx={{ my: 2 }} />
 
         <Typography variant="h6">Travelers</Typography>
-        <TravelersList travelers={trip.travelers} />
+        
+        <TravelersList tripId={trip._id} />
+
       </CardContent>
     </Card>
   );
