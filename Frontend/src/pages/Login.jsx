@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import classes from "./Login.module.css";
 import { loginUser } from "../api/usersApi";
 
-function Login() {
+function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,11 +21,16 @@ function Login() {
 
     try {
       const user = await loginUser(username, password);
+      if (!user) {
+        setError("Invalid username or password");}
+
       localStorage.setItem("loggedInUser", JSON.stringify(user));
 
       if (user.is_admin) {
+        onLogin(user); // <-- update App state
         navigate("/admin");
       } else {
+        onLogin(user); // <-- update App state
         navigate("/user-trips");
       }
     } catch (err) {
