@@ -12,6 +12,19 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET trips by admin ID
+router.get("/admin/:adminId", async (req, res) => {
+  const { adminId } = req.params;
+
+  try {
+    const trips = await Trip.find({ admin_id: adminId }).sort({ start_date: 1 });
+    res.json(trips);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch trips" });
+  }
+});
+
 // POST new trip
 router.post('/', async (req, res) => {
   try {

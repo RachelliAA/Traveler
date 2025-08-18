@@ -4,7 +4,8 @@ import TripList from "../components/TripList";
 import TripDetails from "../components/TripDetails";
 import TripForm from "../components/TripForm";
 import TripFilters from "../components/TripFilters";
-import { fetchTrips, addTrip, updateTrip, deleteTrip } from "../api/tripsApi";
+import ChatButton from "../components/ChatButton";
+import { fetchTripsByAdmin, addTrip, updateTrip, deleteTrip } from "../api/tripsApi";
 
 export default function AdminDashboard({ user }) {
   const [trips, setTrips] = useState([]);
@@ -25,7 +26,7 @@ export default function AdminDashboard({ user }) {
   async function loadTrips() {
     try {
       setLoading(true);
-      const data = await fetchTrips();
+      const data = await fetchTripsByAdmin(user._id);
       setTrips(data);
     } catch (err) {
       setError(err.message);
@@ -73,7 +74,9 @@ export default function AdminDashboard({ user }) {
     .sort((a, b) => new Date(a.start_date) - new Date(b.start_date)); // default sort by start date
 
   return (
+   
     <Container sx={{ mt: 4 }}>
+      <ChatButton userId={user._id} />
       <Typography variant="h4" gutterBottom>
         Welcome, {user?.name} (Admin)
       </Typography>

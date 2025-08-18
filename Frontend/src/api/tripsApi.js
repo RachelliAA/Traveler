@@ -14,6 +14,29 @@ export async function fetchTripById(id) {
   return res.json();
 }
 
+// // fetcha all trips by admin id
+// export async function fetchTripsByAdmin(adminId) {
+//   const res = await fetch(`${BASE_URL}?admin_id=${adminId}`);
+//   if (!res.ok) throw new Error('Failed to fetch trips for admin');
+//   return res.json();
+// }
+
+export async function fetchTripsByAdmin(adminId) {
+  try {
+    console.log(`${BASE_URL}/admin/${adminId}`);
+    const response = await fetch(`${BASE_URL}/admin/${adminId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch trips for admin");
+    }
+    // fetch does not have .data, we need to parse JSON
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error.message || "Failed to fetch trips");
+  }
+}
+
+
 // Add a new trip
 export async function addTrip(tripData) {
   const res = await fetch(BASE_URL, {
