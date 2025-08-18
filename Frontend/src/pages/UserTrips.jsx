@@ -56,23 +56,28 @@ export default function TripsPage({}) {
       </Box>
 
       {/* Content */}
-    <Box sx={{ mt: 3 }}>
+<Box sx={{ mt: 3 }}>
   <Box
     sx={{
       display: "grid",
       gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
       gap: 2,
+      justifyContent: "start", // align grid items to the left
     }}
   >
-
-          {displayedTrips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} onTripClick={()=>onTripClick(trip)}/>
-          ))}
-          {tab === 1 && myTrips.length === 0 && (
-            <Typography>No trips yet.</Typography>
-          )}
-        </Box>
+    {displayedTrips.map((trip) => (
+      <Box key={trip.id} sx={{ maxWidth: 300, width: "100%" }}>
+        <TripCard trip={trip} onTripClick={() => onTripClick(trip)} />
       </Box>
+    ))}
+
+    {tab === 1 && myTrips.length === 0 && (
+      <Typography>No trips yet.</Typography>
+    )}
+  </Box>
+</Box>
+
+
     </Container></>
   );
 }
