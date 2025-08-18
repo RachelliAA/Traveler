@@ -31,10 +31,10 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
     await addUserToTrip(userTrip, trip);
     navigate("/user-trips");
   };
-  handleDelete=async()=>{
+  const handleDelete=async()=>{
 
   }
-  handleEdit=async()=>{
+  const handleEdit=async()=>{
     
   }
   return (
