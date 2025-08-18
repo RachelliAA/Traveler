@@ -98,7 +98,7 @@ export default function App() {
 
   return (
     <Router>
-      <Navbar user={user} onLogout={handleLogout} />
+      {/* <Navbar user={user} onLogout={handleLogout} /> */}
       <Routes>
         <Route path="/" element={<RootPage />} />
         <Route path="/trip/:tripId" element={<TripDetails />} />
