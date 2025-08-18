@@ -8,11 +8,28 @@ export async function fetchTrips() {
 }
 
 // Fetch one trip by ID
+// export async function fetchTripById(id) {
+//   const res = await fetch(`${BASE_URL}/${id}`);
+//   if (!res.ok) throw new Error('Failed to fetch trip');
+//   return res.json();
+// }
 export async function fetchTripById(id) {
-  const res = await fetch(`${BASE_URL}/${id}`);
-  if (!res.ok) throw new Error('Failed to fetch trip');
-  return res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/${id}`);
+
+    // If the server returns a non-2xx status
+    if (!res.ok) {
+      const errorData = await res.json(); // parse JSON error message
+      throw new Error(errorData.error || 'Failed to fetch trip');
+    }
+
+    return res.json(); // the trip data
+  } catch (err) {
+    console.error('Error fetching trip:', err);
+    throw err; // rethrow so your component can catch it
+  }
 }
+
 
 // Add a new trip
 export async function addTrip(tripData) {

@@ -14,12 +14,10 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 
 export default function Navbar({ onProfileClick, user, onLogout }) {
   const navigate = useNavigate();
-  console.log("user!!!!!!!!!", user);
 
   const handleLogout = () => {
-    if (onLogout) onLogout();
     localStorage.removeItem("loggedInUser");
-    navigate("/rootpage");
+    navigate("/");
   };
 
   const handleBack = () => {
