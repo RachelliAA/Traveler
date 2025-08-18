@@ -77,9 +77,4 @@ export default function TripsPage({}) {
   );
 }
 
-/**
- * To Do
- * picture fills card
- * blank screen if no pic
- * 4 if screen gets smaller
- */
+

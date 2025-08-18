@@ -24,7 +24,19 @@ async function fetchUserTripsofUser(user_id){
   return res.json();
 }
 
+export async function cancelTripOrder(user_id, trip, tickets){
+  //delete user trip, returns number of tickets
+  const newTrip={...trip, available_tickets: trip.available_tickets+tickets}
+  updateTrip(trip._id, newTrip)
+}
+export async function changeTripOrder(user_id, trip_id, tickets){
+  //edit user trip:
+  //return where user trip both ids match
+  //take that id and edit num tickets
 
+  const newTrip={...trip, available_tickets: trip.available_tickets+tickets}
+  updateTrip(trip._id, newTrip)
+}
 
 
 export async function fetchTripsofUser(id) {
@@ -40,7 +52,6 @@ export async function fetchTripsofUser(id) {
   return trips;
 
   
-  //query to fetch all userTrips by user
 
 }
 

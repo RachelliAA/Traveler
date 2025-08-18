@@ -7,12 +7,6 @@ export async function fetchTrips() {
   return res.json();
 }
 
-// Fetch one trip by ID
-// export async function fetchTripById(id) {
-//   const res = await fetch(`${BASE_URL}/${id}`);
-//   if (!res.ok) throw new Error('Failed to fetch trip');
-//   return res.json();
-// }
 export async function fetchTripById(id) {
   try {
     const res = await fetch(`${BASE_URL}/${id}`);

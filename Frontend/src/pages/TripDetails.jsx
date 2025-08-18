@@ -31,7 +31,12 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
     await addUserToTrip(userTrip, trip);
     navigate("/user-trips");
   };
+  handleDelete=async()=>{
 
+  }
+  handleEdit=async()=>{
+    
+  }
   return (
     <>
       {/* Navbar */}
@@ -88,16 +93,14 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleSignUp}
-                  disabled={trip.available_tickets === 0}
+                  onClick={handleEdit}
                 >
                   Edit
                 </Button>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleSignUp}
-                  disabled={trip.available_tickets === 0}
+                  onClick={handleDelete}
                 >
                   Delete
                 </Button>
@@ -171,7 +174,6 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
 }
 //todo
 /***
- * my trips all trips
  * allow changing trip order
  * allow deleting trip order
  * disabling if available tickets are 0
