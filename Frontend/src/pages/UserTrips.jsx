@@ -7,8 +7,7 @@ import { fetchTripsofUser } from "../api/UserTripApi";
 import TripCard from "../components/TripCard";
 import ProfileDialog from "../components/Profile";
 
-export default function TripsPage({onLogout = () => console.log("Logout clicked"),
-   onProfileClick = () => console.log("Profile clicked"),}) {
+export default function TripsPage({}) {
   const [tab, setTab] = useState(0);
  const [profileOpen, setProfileOpen] = useState(false);
   const navigate = useNavigate();
@@ -22,14 +21,20 @@ export default function TripsPage({onLogout = () => console.log("Logout clicked"
     });
   };
   useEffect(() => {
-    async function loadTrips() {
-      const fetchedTrips = await fetchTrips();
-      setTrips(fetchedTrips);
-      const fetchedMyTrips = await fetchTripsofUser(user._id);
-      setMyTrips(fetchedMyTrips);
-    }
-    loadTrips();
-  }, []);
+  async function loadTrips() {
+    const fetchedTrips = await fetchTrips();
+    const fetchedMyTrips = await fetchTripsofUser(user._id);
+
+    const myTripIds = new Set(fetchedMyTrips.map(trip => trip._id));
+    const availableTrips = fetchedTrips.filter(trip => !myTripIds.has(trip._id));
+
+    setTrips(availableTrips);
+    setMyTrips(fetchedMyTrips);
+
+  }
+  loadTrips();
+}, [user._id]);
+
   const displayedTrips = tab == 0 ? trips : myTrips;
 
   return (
@@ -51,14 +56,15 @@ export default function TripsPage({onLogout = () => console.log("Logout clicked"
       </Box>
 
       {/* Content */}
-      <Box sx={{ mt: 3 }}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)", // exactly 5 per row
-            gap: 2,
-          }}
-        >
+    <Box sx={{ mt: 3 }}>
+  <Box
+    sx={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+      gap: 2,
+    }}
+  >
+
           {displayedTrips.map((trip) => (
             <TripCard key={trip.id} trip={trip} onTripClick={()=>onTripClick(trip)}/>
           ))}
@@ -70,3 +76,10 @@ export default function TripsPage({onLogout = () => console.log("Logout clicked"
     </Container></>
   );
 }
+
+/**
+ * To Do
+ * picture fills card
+ * blank screen if no pic
+ * 4 if screen gets smaller
+ */
