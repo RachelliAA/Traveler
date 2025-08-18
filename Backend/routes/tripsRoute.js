@@ -1,6 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const Trip = require('../models/Trip');
+const mongoose = require('mongoose');    // needed for ID validation
+
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid trip ID" });
+    }
+
+    // Fetch trip WITHOUT populate
+    const trip = await Trip.findById(id);
+
+    if (!trip) return res.status(404).json({ error: "Trip not found" });
+
+    res.json(trip);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 // GET all trips (populate admin info)
 router.get('/', async (req, res) => {
@@ -11,6 +34,24 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const trip = await Trip.findOne({ _id: ObjectId(id) })   // if your field is actually "_id"
+//       .populate('admin_id');
+
+//     if (!trip) {
+//       return res.status(404).json({ error: "Trip not found" });
+//     }
+
+//     res.json(trip);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+
+
 
 // GET trips by admin ID
 router.get("/admin/:adminId", async (req, res) => {

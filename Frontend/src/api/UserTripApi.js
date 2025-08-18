@@ -32,9 +32,11 @@ export async function fetchTripsofUser(id) {
   //now i have all the trip ids of this user, for each one get its full trip, add it to the list
   const trips = await Promise.all(
   userTrips.map(ut =>
-        fetchTripById(ut._trip_id)
+        fetchTripById(ut.trip_id).then(console.log("gooooood"))
+      .catch(err => console.log(err.message))
     )
   );
+      
   return trips;
 
   
