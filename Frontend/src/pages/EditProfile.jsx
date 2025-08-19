@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { addUser } from "../api/usersApi";
@@ -9,27 +8,25 @@ import {
   Typography,
   Container,
   Alert,
-  Paper
+  Paper,
 } from "@mui/material";
 
 function EditProfile() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const { user } = location.state || {};
 
   const [person, setPerson] = useState(user);
-    const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-const handleFieldChange = (field, value) => {
-  setPerson((prev) => ({
-    ...prev,
-    [field]: value, 
-  }));
-};
-
-
+  const handleFieldChange = (field, value) => {
+    setPerson((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -37,8 +34,6 @@ const handleFieldChange = (field, value) => {
     setSuccess("");
 
     try {
-     
-
       await updateUser(person.id, person);
       setSuccess("Edit successful! Redirecting to Homepage...");
       setTimeout(() => navigate(`/user-trips`), 1500);
@@ -51,11 +46,19 @@ const handleFieldChange = (field, value) => {
     <Container maxWidth="sm" sx={{ mt: 6 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          { "Edit Profile"}
+          {"Edit Profile"}
         </Typography>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
 
         <Box component="form" onSubmit={handleRegister}>
           <TextField
@@ -99,26 +102,24 @@ const handleFieldChange = (field, value) => {
             margin="normal"
           />
 
-         <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
-  <Button
-    type="submit"
-    variant="outlined"
-        color="secondary"
+          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+            <Button
+              type="submit"
+              variant="outlined"
+              color="secondary"
+              sx={{ flex: 1, py: 1.2 }}
+            >
+              Save Changes
+            </Button>
 
-    sx={{ flex: 1, py: 1.2 }}
-  >
-    Save Changes
-  </Button>
-
-  <Button
-    onClick={() => navigate(`/user-trips`)}
-    variant="contained"
-    sx={{ flex: 1, py: 1.2 }}
-  >
-    Cancel
-  </Button>
-</Box>
-
+            <Button
+              onClick={() => navigate(`/user-trips`)}
+              variant="contained"
+              sx={{ flex: 1, py: 1.2 }}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>

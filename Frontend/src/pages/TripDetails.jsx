@@ -21,6 +21,7 @@ export default function TripDetailsPage() {
   const { trip, user, myTrip } = location.state || {};
 
   const [tickets, setTickets] = useState(1);
+ const [profileOpen, setProfileOpen] = useState(false);
 
   const handleSignUp = async () => {
     const userTrip = {
@@ -41,7 +42,11 @@ export default function TripDetailsPage() {
     <>
       {/* Navbar */}
       <Navbar onProfileClick={onProfileClick} user={user} />
-
+  <ProfileDialog
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        user={user}
+      />
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Grid container spacing={8}>
           {/* Left Column: Trip Info */}
