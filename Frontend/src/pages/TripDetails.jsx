@@ -178,6 +178,11 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
  * allow deleting trip order
  * disabling if available tickets are 0
  * load at scroll....
+ * edit profile
+ * change log in to mui
+ * logout
+ * remove double header
+ * 
  *
  */
 //questions
