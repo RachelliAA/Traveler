@@ -1,4 +1,4 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTitle,
@@ -12,6 +12,13 @@ import {
 } from "@mui/material";
 
 export default function ProfileDialog({ open, onClose, user }) {
+    const navigate = useNavigate();
+
+  const onEdit=()=>{
+     navigate('/edit', {
+      state: { user: user},
+    });
+  }
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>Profile</DialogTitle>
@@ -42,13 +49,17 @@ export default function ProfileDialog({ open, onClose, user }) {
               <strong>Address:</strong> {user?.address || "-"}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-                {user?.is_admin ?<strong>Admin:</strong>:<></>}
+              {user?.is_admin ? <strong>Admin</strong> : ""}
             </Typography>
           </Box>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+       
+        <Button onClick={onEdit} color="primary">
+          Edit
+        </Button>
+         <Button onClick={onClose} color="primary">
           Close
         </Button>
       </DialogActions>

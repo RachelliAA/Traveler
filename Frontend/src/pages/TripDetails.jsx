@@ -15,7 +15,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { addUserToTrip } from "../api/UserTripApi";
 
-export default function TripDetailsPage({ onProfileClick = () => {} }) {
+export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { trip, user, myTrip } = location.state || {};
@@ -179,9 +179,10 @@ export default function TripDetailsPage({ onProfileClick = () => {} }) {
  * disabling if available tickets are 0
  * load at scroll....
  * edit profile
- * change log in to mui
- * logout
- * remove double header
+ * V change log in to mui
+ * V logout
+ * V remove double header
+ * V my trips layout
  * 
  *
  */

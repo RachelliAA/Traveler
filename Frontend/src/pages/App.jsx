@@ -8,8 +8,7 @@ import Login from "./Login";
 import Register from "./Register"; 
 import RootPage from "./RootPage"; 
 import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-
+import EditProfile from "./EditProfile";
 export default function App() {
   const mockAdmin = { id: "1", name: "Admin", role: "admin" };
   const [user, setUser] = useState(
@@ -21,10 +20,6 @@ export default function App() {
     setUser(loggedInUser); // <-- update state immediately
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    setUser(null);
-  };
 
   return (
     <Router>
@@ -37,6 +32,8 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<AdminDashboard user={user} />} />
         <Route path="/user-trips" element={<UserTrips />} />
+        <Route path="/edit" element={<EditProfile />} />
+
       </Routes>
       <Footer/>
     </Router>

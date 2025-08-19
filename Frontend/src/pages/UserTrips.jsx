@@ -60,13 +60,13 @@ export default function TripsPage({}) {
   <Box
     sx={{
       display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+      gridTemplateColumns: "repeat(auto-fit, minmax(216px, 216px))", // each card = max 200px
       gap: 2,
-      justifyContent: "start", // align grid items to the left
+      justifyContent: "start", // align grid items left
     }}
   >
     {displayedTrips.map((trip) => (
-      <Box key={trip.id} sx={{ maxWidth: 300, width: "100%" }}>
+      <Box key={trip.id} sx={{ width: 216 }}>
         <TripCard trip={trip} onTripClick={() => onTripClick(trip)} />
       </Box>
     ))}

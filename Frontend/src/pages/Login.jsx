@@ -197,7 +197,8 @@ function Login({ onLogin }) {
               component="button"
               variant="body2"
               sx={{ fontWeight: "bold", color: "primary.main" }}
-              onClick={() => navigate(`/register?role=${role}`)}
+              onClick={() => 
+                navigate(`/register?role=${role}`)}
             >
               Register here
             </Link>
