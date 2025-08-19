@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import { fetchTripsofUser } from "../api/UserTripApi";
 import TripCard from "../components/TripCard";
 import ProfileDialog from "../components/Profile";
+import TripFilters from "../components/TripFilters";
 
 export default function TripsPage({}) {
   const [tab, setTab] = useState(0);
@@ -15,6 +16,11 @@ export default function TripsPage({}) {
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const [trips, setTrips] = useState([]);
   const [myTrips, setMyTrips] = useState([]);
+  //filters:
+  const [filterText, setFilterText] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [availableTickets, setAvailableTickets] = useState(0);
+
   const onTripClick = (trip) => {
     navigate(`/trip/${trip._id}`, {
       state: { trip: trip, user: user, myTrip: tab==0? false:true },
@@ -35,7 +41,21 @@ export default function TripsPage({}) {
   loadTrips();
 }, [user._id]);
 
-  const displayedTrips = tab == 0 ? trips : myTrips;
+  const displayedTrips = (tab == 0 ? trips : myTrips)
+    .filter((trip) => {
+      const matchesText =
+        trip.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        (trip.description?.toLowerCase().includes(filterText.toLowerCase()) ?? false);
+
+      const matchesDate = startDate
+        ? new Date(trip.start_date) >= new Date(startDate)
+        : true;
+
+      const matchesTickets = trip.available_tickets >= availableTickets;
+
+      return matchesText && matchesDate && matchesTickets;
+    })
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date)); // default sort by start date
 
   return (
     <> <Navbar onProfileClick={()=>setProfileOpen(true)} user={user}></Navbar>
@@ -48,13 +68,21 @@ export default function TripsPage({}) {
            
 
       {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider", marginBottom: 4}}>
         <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)}>
           <Tab label="Trips" />
           <Tab label="My Trips" />
         </Tabs>
       </Box>
-
+ <TripFilters
+ 
+            filterText={filterText}
+            setFilterText={setFilterText}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            availableTickets={availableTickets}
+            setAvailableTickets={setAvailableTickets}
+          />
       {/* Content */}
 <Box sx={{ mt: 3 }}>
   <Box

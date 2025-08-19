@@ -10,10 +10,11 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
+import ProfileDialog from "../components/Profile";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { addUserToTrip } from "../api/UserTripApi";
+import { addUserToTrip, cancelTripOrder, changeTripOrder } from "../api/UserTripApi";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function TripDetailsPage() {
   const { trip, user, myTrip } = location.state || {};
 
   const [tickets, setTickets] = useState(1);
- const [profileOpen, setProfileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleSignUp = async () => {
     const userTrip = {
@@ -33,15 +34,18 @@ export default function TripDetailsPage() {
     navigate("/user-trips");
   };
   const handleDelete=async()=>{
-
+    await cancelTripOrder(user._id, trip)
+    navigate("/user-trips");
   }
-  const handleEdit=async()=>{
-    
+  const handleEdit=async(tickets)=>{
+    //make him a pop up asking how many tickets he wants. send that in tickets
+    await changeTripOrder(user.id, trip, tickets)
+    navigate("/user-trips");
   }
   return (
     <>
       {/* Navbar */}
-      <Navbar onProfileClick={onProfileClick} user={user} />
+      <Navbar onProfileClick={()=>setProfileOpen(true)} user={user} />
   <ProfileDialog
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
@@ -100,14 +104,14 @@ export default function TripDetailsPage() {
                   color="primary"
                   onClick={handleEdit}
                 >
-                  Edit
+                  Order more tickets
                 </Button>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleDelete}
                 >
-                  Delete
+                  Cancel order
                 </Button>
                 </>:<><TextField
                   select
@@ -180,15 +184,19 @@ export default function TripDetailsPage() {
 //todo
 /***
  * allow changing trip order
- * allow deleting trip order
- * disabling if available tickets are 0
+ * V allow deleting trip order
+ * V disabling if available tickets are 0
  * load at scroll....
- * edit profile
+ * V edit profile
+ * V make get user query
+ * V fix blank screen
  * V change log in to mui
  * V logout
  * V remove double header
  * V my trips layout
- * 
+ * V add searches
+ * trip details combine?
+ * V after edit, put new user in db as well
  *
  */
 //questions

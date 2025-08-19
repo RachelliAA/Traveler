@@ -24,15 +24,35 @@ async function fetchUserTripsofUser(user_id){
   return res.json();
 }
 
-export async function cancelTripOrder(user_id, trip, tickets){
-  //delete user trip, returns number of tickets
-  const newTrip={...trip, available_tickets: trip.available_tickets+tickets}
-  updateTrip(trip._id, newTrip)
+export async function cancelTripOrder(user_id, trip) {
+  const res = await fetch(`${BASE_URL}/${user_id}/${trip._id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to delete user trip");
+  }
+
+  const deletedUserTrip = await res.json();
+
+  const newTrip = {
+    ...trip,
+    available_tickets: trip.available_tickets + (deletedUserTrip.number_of_tickets || 0),
+  };
+
+  // call your updateTrip function
+  await updateTrip(trip._id, newTrip);
 }
-export async function changeTripOrder(user_id, trip_id, tickets){
-  //edit user trip:
-  //return where user trip both ids match
-  //take that id and edit num tickets
+
+export async function changeTripOrder(user_id, trip, tickets){
+    const res = await fetch(`${BASE_URL}/${user_id}/${trip._id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ number_of_tickets: tickets }),
+  });
+
+  
 
   const newTrip={...trip, available_tickets: trip.available_tickets+tickets}
   updateTrip(trip._id, newTrip)

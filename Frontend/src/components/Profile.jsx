@@ -16,7 +16,7 @@ export default function ProfileDialog({ open, onClose, user }) {
 
   const onEdit=()=>{
      navigate('/edit', {
-      state: { user: user},
+      state: { id: user._id},
     });
   }
   return (

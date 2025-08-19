@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { addUser } from "../api/usersApi";
+import { addUser, fetchUserById } from "../api/usersApi";
 import {
   Box,
   TextField,
@@ -10,17 +10,23 @@ import {
   Alert,
   Paper,
 } from "@mui/material";
+import { updateUser } from "../api/usersApi";
 
 function EditProfile() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = location.state || {};
 
-  const { user } = location.state || {};
-
-  const [person, setPerson] = useState(user);
+  const [person, setPerson] = useState({});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  useEffect(() => {
+    async function loadUser() {
+      setPerson(await fetchUserById(id));
+    }
 
+    loadUser();
+  }, []);
   const handleFieldChange = (field, value) => {
     setPerson((prev) => ({
       ...prev,
@@ -34,7 +40,11 @@ function EditProfile() {
     setSuccess("");
 
     try {
-      await updateUser(person.id, person);
+      await updateUser(person._id, person);
+      const { password, ...personWithoutPassword } = person;
+      localStorage.setItem("loggedInUser", JSON.stringify(personWithoutPassword));
+
+
       setSuccess("Edit successful! Redirecting to Homepage...");
       setTimeout(() => navigate(`/user-trips`), 1500);
     } catch (err) {
@@ -64,7 +74,7 @@ function EditProfile() {
           <TextField
             fullWidth
             label="Full Name"
-            value={person.name}
+            value={person.name || ""}
             onChange={(e) => handleFieldChange("name", e.target.value)}
             margin="normal"
             required
@@ -73,16 +83,15 @@ function EditProfile() {
             fullWidth
             type="email"
             label="Email"
-            value={person.email}
+            value={person.email || ""}
             onChange={(e) => handleFieldChange("email", e.target.value)}
             margin="normal"
             required
           />
           <TextField
             fullWidth
-            type="password"
             label="Password"
-            value={person.password}
+            value={person.password || ""}
             onChange={(e) => handleFieldChange("password", e.target.value)}
             margin="normal"
             required
@@ -90,14 +99,14 @@ function EditProfile() {
           <TextField
             fullWidth
             label="Phone Number"
-            value={person.phone_number}
+            value={person.phone_number || ""}
             onChange={(e) => handleFieldChange("phone_number", e.target.value)}
             margin="normal"
           />
           <TextField
             fullWidth
             label="Address"
-            value={person.address}
+            value={person.address || ""}
             onChange={(e) => handleFieldChange("address", e.target.value)}
             margin="normal"
           />

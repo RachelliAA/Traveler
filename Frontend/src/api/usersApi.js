@@ -7,11 +7,24 @@ export async function fetchUsers() {
   return res.json();
 }
 
-// Fetch one user by ID
+// // Fetch one user by ID
+// export async function fetchUserById(id) {
+//   const res = await fetch(`${BASE_URL}/${id}`);
+//   if (!res.ok) throw new Error('Failed to fetch user');
+//   return res.json();
+// }
 export async function fetchUserById(id) {
-  const res = await fetch(`${BASE_URL}/${id}`);
-  if (!res.ok) throw new Error('Failed to fetch user');
-  return res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/${id}`);
+    if (!res.ok) {
+      const errorData = await res.json(); 
+      throw new Error(errorData.error || 'Failed to fetch user');
+    }
+
+    return res.json();
+  } catch (err) {
+    console.error('Error fetching user:', err);
+  }
 }
 
 // Add a new user

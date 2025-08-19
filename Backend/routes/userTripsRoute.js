@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserTrip = require('../models/UserTrip');
+const mongoose = require('mongoose'); 
 
 
 // GET all travelers of a specific trip
@@ -28,6 +29,73 @@ router.post('/', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+//delete usertrip by trip id user id
+// router.delete('/:user_id/:trip_id', async (req, res) => {
+//   try {
+//     const { user_id, trip_id } = req.params;
+
+//     const deleted = await UserTrip.findOneAndDelete({
+//       user_id,
+//       trip_id
+//     });
+
+//     if (!deleted) {
+//       return res.status(404).json({ error: "User trip not found" });
+//     }
+
+//     res.json(deleted);
+//   } catch (err) {
+//     console.error("Error deleting user trip:", err);
+//     res.status(400).json({ error: err.message });
+//   }
+// });
+
+router.delete('/:user_id/:trip_id', async (req, res) => {
+  try {
+    const { user_id, trip_id } = req.params;
+
+    const deleted = await UserTrip.findOneAndDelete({ 
+      user_id: new mongoose.Types.ObjectId(user_id),
+      trip_id: new mongoose.Types.ObjectId(trip_id)
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ error: "User trip not found" });
+    }
+
+    res.json(deleted);
+  } catch (err) {
+    console.error("Error deleting user trip:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
+router.put('/:user_id/:trip_id', async (req, res) => {
+  try {
+    const { user_id, trip_id } = req.params;
+    const { number_of_tickets } = req.body; // pass new ticket count from frontend
+
+    const updated = await UserTrip.findOneAndUpdate(
+      { 
+        user_id: new mongoose.Types.ObjectId(user_id),
+        trip_id: new mongoose.Types.ObjectId(trip_id)
+      },
+      { $set: { number_of_tickets } }, // update ticket count
+      { new: true } // return updated document
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "User trip not found" });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error("Error updating user trip:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
+
 
 // GET trips by user_id
 router.get('/user/:user_id', async (req, res) => {
