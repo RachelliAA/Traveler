@@ -28,6 +28,7 @@ export default function HomePage() {
 
   const displayedTrips = tabIndex === 0 ? availableTrips : myTrips
 
+  user = localStorage.getItem('loggedInUser')
   return (
     <Container maxWidth="md">
       <Box mt={4}>
@@ -35,25 +36,25 @@ export default function HomePage() {
 
         {/* Tabs */}
        <Tabs
-  value={tabIndex}
-  onChange={handleTabChange}
-  centered
-  indicatorColor="primary"
-  textColor="primary"
-  sx={{ mb: 2 }}
->
-  <Tab label="Available Trips" />
-  <Tab label="My Trips" />
-</Tabs>
-<Box mt={2}>
-  <Grid container spacing={3}>
-    {displayedTrips.map((trip) => (
-      <Grid item xs={12} sm={6} md={4} key={trip.id}>
-       <Button>trip</Button> 
-      </Grid>
-    ))}
-  </Grid>
-</Box>
+          value={tabIndex}
+          onChange={handleTabChange}
+          centered
+          indicatorColor="primary"
+          textColor="primary"
+          sx={{ mb: 2 }}
+        >
+        <Tab label="Available Trips" />
+        <Tab label="My Trips" />
+        </Tabs>
+        <Box mt={2}>
+          <Grid container spacing={3}>
+            {displayedTrips.map((trip) => (
+              <Grid item xs={12} sm={6} md={4} key={trip.id}>
+              <Button>trip</Button> 
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
      
 
@@ -64,6 +65,7 @@ export default function HomePage() {
           </Typography>
         )}
       </Box>
+      <ChatButton userId={user._id} />
     </Container>
   )
 }

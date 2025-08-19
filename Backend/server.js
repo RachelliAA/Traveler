@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const chatBoxRoute = require("./routes/chatBoxRoute");
 const userRoutes = require('./routes/usersRoute');
 const tripRoutes = require('./routes/tripsRoute');
 const userTripRoutes = require('./routes/userTripsRoute');
@@ -25,7 +26,7 @@ async function start() {
     app.use('/api/users', userRoutes);
     app.use('/api/trips', tripRoutes);
     app.use('/api/userTrips', userTripRoutes);
-
+    app.use("/chat", chatBoxRoute);
 
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   } catch (err) {

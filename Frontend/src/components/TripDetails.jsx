@@ -62,11 +62,11 @@ export default function TripDetails({ trip, onEditTrip, onBack, onDeleteTrip }) 
 
         <Box mt={2}>
           <Button variant="contained" onClick={onEditTrip} sx={{ mr: 1 }}>
-            Edit
+            Update Trip Details
           </Button>
-          <Button variant="outlined" onClick={onBack} sx={{ mr: 1 }}>
+          {/* <Button variant="outlined" onClick={onBack} sx={{ mr: 1 }}>
             Back
-          </Button>
+          </Button> */}
           <Button
             variant="outlined"
             color="error"
@@ -76,7 +76,7 @@ export default function TripDetails({ trip, onEditTrip, onBack, onDeleteTrip }) 
               }
             }}
           >
-            Delete
+            Cancle Trip
           </Button>
         </Box>
         <Divider sx={{ my: 2 }} />

@@ -5,6 +5,7 @@ import TripDetails from "../components/TripDetails";
 import TripForm from "../components/TripForm";
 import TripFilters from "../components/TripFilters";
 import ChatButton from "../components/ChatButton";
+import Navbar from "../components/Navbar";
 import { fetchTripsByAdmin, addTrip, updateTrip, deleteTrip } from "../api/tripsApi";
 
 export default function AdminDashboard({ user }) {
@@ -76,6 +77,10 @@ export default function AdminDashboard({ user }) {
   return (
    
     <Container sx={{ mt: 4 }}>
+      <Navbar
+        user={user}
+        onProfileClick={() => navigate("/profile")}
+      />
       <ChatButton userId={user._id} />
       <Typography variant="h4" gutterBottom>
         Welcome, {user?.name} (Admin)
