@@ -48,23 +48,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-//delete trip by user and trip id
-router.delete('/:user_id/:trip_id', async (req, res) => {
+//delete trip by  id
+router.delete('/:id', async (req, res) => {
+      console.log("Deleting UserTrip with ID:", req.params.id);
+
   try {
-    const { user_id, trip_id } = req.params;
-
-    const deleted = await UserTrip.findOneAndDelete({ 
-      user_id: new mongoose.Types.ObjectId(user_id),
-      trip_id: new mongoose.Types.ObjectId(trip_id)
-    });
-
-    if (!deleted) {
-      return res.status(404).json({ error: "User trip not found" });
-    }
-
-    res.json(deleted);
+    await UserTrip.findByIdAndDelete(req.params.id);
+    res.json({ message: "USer Trip deleted" });
   } catch (err) {
-    console.error("Error deleting user trip:", err);
     res.status(400).json({ error: err.message });
   }
 });

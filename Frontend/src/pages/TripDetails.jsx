@@ -17,6 +17,7 @@ import Navbar from "../components/Navbar";
 import { addUserToTrip, cancelTripOrder, changeTripOrder } from "../api/UserTripApi";
 import { useEffect } from "react";
 import { fetchUserTrip } from "../api/UserTripApi";
+import TicketOrderDialog from "../components/AddTickets";
 export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,17 +25,17 @@ export default function TripDetailsPage() {
 
   const [tickets, setTickets] = useState(1);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [usertrip, setUsertrip]=useState({})
+  const [openAddTickets, setOpenAddTickets] = useState(false);
+
    useEffect(() => {
     async function getNumberOfTickets() {
-      const z=await fetchUserTrip(user._id, trip._id);
-      console.log(z)
-      setTickets(z.number_of_tickets)  
-      console.log(tickets)
+      setUsertrip(await fetchUserTrip(user._id, trip._id))  
     }
     if(myTrip){
       getNumberOfTickets()
     }
-  }, []);
+  }, [openAddTickets]);
   const handleSignUp = async () => {
     const userTrip = {
       trip_id: trip._id,
@@ -45,14 +46,13 @@ export default function TripDetailsPage() {
     navigate("/user-trips");
   };
   const handleDelete=async()=>{
-    await cancelTripOrder(user._id, trip)
+    await cancelTripOrder(usertrip, trip)
     navigate("/user-trips");
   }
-  const handleEdit=async(tickets)=>{
-    //make him a pop up asking how many tickets he wants. send that in tickets
-    await changeTripOrder(user.id, trip, tickets)
-    navigate("/user-trips");
-  }
+  
+const handleOrderTickets = async(tickets_num) => {
+   await changeTripOrder(usertrip, trip,  tickets_num)
+  };
 
   return (
     <>
@@ -113,16 +113,21 @@ export default function TripDetailsPage() {
               >
                 {myTrip? <>
                   <Typography variant="body1">
-                <strong>{`You ordered ${tickets} ${tickets>1? "tickets":"ticket"}`}</strong> 
+                <strong>{`You ordered ${usertrip.number_of_tickets} ${usertrip.number_of_tickets>1? "tickets":"ticket"}`}</strong> 
                
               </Typography>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleEdit}
+                  onClick={()=>setOpenAddTickets(true)}
                 >
                   Order more tickets
                 </Button>
+                   <TicketOrderDialog
+        open={openAddTickets}
+        onClose={() => setOpenAddTickets(false)}
+        onOrder={handleOrderTickets}
+      />
                 <Button
                   variant="contained"
                   color="primary"
@@ -202,21 +207,10 @@ export default function TripDetailsPage() {
 }
 //todo
 /***
- * allow changing trip order
- * V allow deleting trip order
- * V disabling if available tickets are 0
- * load at scroll....
- * V edit profile
- * V make get user query
- * V fix blank screen
- * V change log in to mui
- * V logout
- * V remove double header
- * V my trips layout
- * V add searches
- * trip details combine?
- * V after edit, put new user in db as well
- *
+ * load at scroll
+ * fix positions in details
+ * add price to filters
+ * 
  */
 //questions
 /**
