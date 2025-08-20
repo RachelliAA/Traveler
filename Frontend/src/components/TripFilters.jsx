@@ -1,4 +1,4 @@
-import { Box, TextField, Slider, Typography } from "@mui/material";
+import { Box, TextField, Slider, Typography, Button } from "@mui/material";
 
 export default function TripFilters({
   filterText,
@@ -8,8 +8,14 @@ export default function TripFilters({
   availableTickets,
   setAvailableTickets,
 }) {
+  const handleClearFilters = () => {
+    setFilterText("");
+    setStartDate("");
+    setAvailableTickets(0);
+  };
+
   return (
-    <Box display="flex" gap={2} mb={2} flexWrap="wrap">
+    <Box display="flex" gap={2} mb={2} flexWrap="wrap" alignItems="center">
       <TextField
         label="Search by Name or Description"
         value={filterText}
@@ -26,7 +32,9 @@ export default function TripFilters({
       />
 
       <Box sx={{ width: 200 }}>
-        <Typography gutterBottom>Available Tickets ≥ {availableTickets}</Typography>
+        <Typography gutterBottom>
+          Available Tickets ≥ {availableTickets}
+        </Typography>
         <Slider
           value={availableTickets}
           onChange={(e, val) => setAvailableTickets(val)}
@@ -35,6 +43,16 @@ export default function TripFilters({
           valueLabelDisplay="auto"
         />
       </Box>
+
+      {/* Clear All Filters Button */}
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={handleClearFilters}
+        sx={{ height: "fit-content" }}
+      >
+        Clear All
+      </Button>
     </Box>
   );
 }
