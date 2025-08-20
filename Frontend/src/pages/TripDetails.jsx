@@ -15,7 +15,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { addUserToTrip, cancelTripOrder, changeTripOrder } from "../api/UserTripApi";
-
+import { useEffect } from "react";
+import { fetchUserTrip } from "../api/UserTripApi";
 export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +24,17 @@ export default function TripDetailsPage() {
 
   const [tickets, setTickets] = useState(1);
   const [profileOpen, setProfileOpen] = useState(false);
-
+   useEffect(() => {
+    async function getNumberOfTickets() {
+      const z=await fetchUserTrip(user._id, trip._id);
+      console.log(z)
+      setTickets(z.number_of_tickets)  
+      console.log(tickets)
+    }
+    if(myTrip){
+      getNumberOfTickets()
+    }
+  }, []);
   const handleSignUp = async () => {
     const userTrip = {
       trip_id: trip._id,
@@ -42,6 +53,7 @@ export default function TripDetailsPage() {
     await changeTripOrder(user.id, trip, tickets)
     navigate("/user-trips");
   }
+
   return (
     <>
       {/* Navbar */}
@@ -78,6 +90,7 @@ export default function TripDetailsPage() {
                 <strong>Available Tickets:</strong> {trip.available_tickets} /{" "}
                 {trip.max_tickets}
               </Typography>
+             
             </Box>
 
             <Divider />
@@ -99,6 +112,10 @@ export default function TripDetailsPage() {
                 sx={{ display: "flex", gap: 2, alignItems: "center", mt: 3 }}
               >
                 {myTrip? <>
+                  <Typography variant="body1">
+                <strong>{`You ordered ${tickets} ${tickets>1? "tickets":"ticket"}`}</strong> 
+               
+              </Typography>
                 <Button
                   variant="contained"
                   color="primary"
@@ -113,7 +130,9 @@ export default function TripDetailsPage() {
                 >
                   Cancel order
                 </Button>
-                </>:<><TextField
+                </>:<>
+                
+                <TextField
                   select
                   label="Tickets"
                   value={tickets}

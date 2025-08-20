@@ -3,6 +3,24 @@ const router = express.Router();
 const UserTrip = require('../models/UserTrip');
 const mongoose = require('mongoose'); 
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid user trip ID" });
+    }
+
+    const user = await UserTrip.findById(id);
+
+    if (!user) return res.status(404).json({ error: "User trip not found" });
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // GET all travelers of a specific trip
 router.get('/trip/:trip_id', async (req, res) => {
@@ -19,7 +37,7 @@ router.get('/trip/:trip_id', async (req, res) => {
 });
 
 
-// POST new user
+// POST new user trip
 router.post('/', async (req, res) => {
 
   try {
@@ -29,27 +47,8 @@ router.post('/', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-//delete usertrip by trip id user id
-// router.delete('/:user_id/:trip_id', async (req, res) => {
-//   try {
-//     const { user_id, trip_id } = req.params;
 
-//     const deleted = await UserTrip.findOneAndDelete({
-//       user_id,
-//       trip_id
-//     });
-
-//     if (!deleted) {
-//       return res.status(404).json({ error: "User trip not found" });
-//     }
-
-//     res.json(deleted);
-//   } catch (err) {
-//     console.error("Error deleting user trip:", err);
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
+//delete trip by user and trip id
 router.delete('/:user_id/:trip_id', async (req, res) => {
   try {
     const { user_id, trip_id } = req.params;
@@ -69,6 +68,7 @@ router.delete('/:user_id/:trip_id', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+//update by both ids
 router.put('/:user_id/:trip_id', async (req, res) => {
   try {
     const { user_id, trip_id } = req.params;
@@ -94,9 +94,6 @@ router.put('/:user_id/:trip_id', async (req, res) => {
   }
 });
 
-
-
-
 // GET trips by user_id
 router.get('/user/:user_id', async (req, res) => {
   try {
@@ -107,7 +104,7 @@ router.get('/user/:user_id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
+//update by userTrip id
 router.put('/:id', async (req, res) => {
   try {
     const updated = await UserTrip.findByIdAndUpdate(req.params.id, req.body, { new: true });

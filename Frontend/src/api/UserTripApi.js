@@ -75,7 +75,6 @@ export async function fetchTripsofUser(id) {
 
 }
 
-//const BASE_URL = 'http://localhost:5000/api/userTrips';
 
 export async function fetchTravelersOfTrip(tripId) {
   const res = await fetch(`${BASE_URL}/trip/${tripId}`);
@@ -83,3 +82,6 @@ export async function fetchTravelersOfTrip(tripId) {
   return res.json();
 }
 
+export async function fetchUserTrip(user_id, trip_id){
+  return (await fetchUserTripsofUser(user_id)).find(item => item.trip_id === trip_id)  
+}
