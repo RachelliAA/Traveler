@@ -9,6 +9,7 @@ import RootPage from "./RootPage";
 import Footer from "../components/Footer";
 import EditProfile from "./EditProfile";
 import AdminTripDetails from "./AdminTripDetails";
+import PaymentPage from "./PaymentPage";
 import { Box } from "@mui/material";
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/user-trips" element={<UserTrips />} />
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/adminTripDetails/:tripId" element={<AdminTripDetails />} />
+          <Route path="/payment" element={<PaymentPage />} />
 
         </Routes>
 

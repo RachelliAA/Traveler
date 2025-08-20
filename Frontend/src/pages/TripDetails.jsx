@@ -48,15 +48,19 @@ export default function TripDetailsPage() {
     }
   }, [openAddTickets]);
 
-  const handleSignUp = async () => {
-    const userTrip = {
-      trip_id: trip._id,
-      user_id: user._id,
-      number_of_tickets: tickets,
-    };
-    await addUserToTrip(userTrip, trip);
-    navigate("/user-trips");
+  // const handleSignUp = async () => {
+  //   const userTrip = {
+  //     trip_id: trip._id,
+  //     user_id: user._id,
+  //     number_of_tickets: tickets,
+  //   };
+  //   await addUserToTrip(userTrip, trip);
+  //   navigate("/user-trips");
+  // };
+  const handleSignUp = () => {
+    navigate("/payment", { state: { trip, tickets, user } });
   };
+
 
   const handleDelete = async () => {
     await cancelTripOrder(usertrip, trip);
