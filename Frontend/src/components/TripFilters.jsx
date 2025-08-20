@@ -7,11 +7,14 @@ export default function TripFilters({
   setStartDate,
   availableTickets,
   setAvailableTickets,
+  maxPrice,
+  setPrice
 }) {
   const handleClearFilters = () => {
     setFilterText("");
     setStartDate("");
     setAvailableTickets(0);
+    setPrice(500)
   };
 
   return (
@@ -31,7 +34,7 @@ export default function TripFilters({
         InputLabelProps={{ shrink: true }}
       />
 
-      <Box sx={{ width: 200 }}>
+      <Box sx={{ width: 200, marginLeft: '25px' }}>
         <Typography gutterBottom>
           Available Tickets ≥ {availableTickets}
         </Typography>
@@ -44,12 +47,27 @@ export default function TripFilters({
         />
       </Box>
 
+        <Box sx={{ width: 200, marginLeft: '25px' }}>
+        <Typography gutterBottom>
+          Maximum price ≤ {maxPrice}
+        </Typography>
+        <Slider
+          value={maxPrice}
+          onChange={(e, val) => setPrice(val)}
+          min={0}
+          max={500} // adjust based on your data
+          valueLabelDisplay="auto"
+        />
+      </Box>
+
+       
+
       {/* Clear All Filters Button */}
       <Button
         variant="outlined"
         color="secondary"
         onClick={handleClearFilters}
-        sx={{ height: "fit-content" }}
+        sx={{ height: "fit-content", marginLeft: '30px' }}
       >
         Clear All
       </Button>

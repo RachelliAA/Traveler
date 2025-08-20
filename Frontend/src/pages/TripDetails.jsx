@@ -28,7 +28,7 @@ export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { trip, user, myTrip } = location.state || {};
-
+  const [thisTrip, setThisTrip]=useState(trip)
   const [tickets, setTickets] = useState(1);
   const [profileOpen, setProfileOpen] = useState(false);
   const [usertrip, setUsertrip] = useState({});
@@ -38,11 +38,11 @@ export default function TripDetailsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const imagesPerPage = 4;
   const totalPages = Math.ceil((trip.images?.length || 0) / imagesPerPage);
-
-  useEffect(() => {
-    async function getNumberOfTickets() {
+ async function getNumberOfTickets() {
       setUsertrip(await fetchUserTrip(user._id, trip._id));
     }
+  useEffect(() => {
+   
     if (myTrip) {
       getNumberOfTickets();
     }
@@ -64,7 +64,10 @@ export default function TripDetailsPage() {
   };
 
   const handleOrderTickets = async (tickets_num) => {
-    await changeTripOrder(usertrip, trip, tickets_num);
+  const newTrip={...trip, available_tickets: trip.available_tickets-tickets_num}
+    await changeTripOrder(usertrip, newTrip, tickets_num);
+    setThisTrip(newTrip)
+    getNumberOfTickets()
   };
 
   // Navigate images
@@ -78,7 +81,7 @@ export default function TripDetailsPage() {
   };
 
   const currentImages =
-    trip.images?.slice(
+    thisTrip.images?.slice(
       currentPage * imagesPerPage,
       currentPage * imagesPerPage + imagesPerPage
     ) || [];
@@ -105,27 +108,27 @@ export default function TripDetailsPage() {
           {/* Left Side: Trip Info */}
           <Grid item xs={12} md={7}>
             <Typography variant="h4" gutterBottom>
-              {trip.name}
+              {thisTrip.name}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              {trip.location}
+              {thisTrip.location}
             </Typography>
 
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1">
                 <strong>Start Date:</strong>{" "}
-                {new Date(trip.start_date).toLocaleDateString()}
+                {new Date(thisTrip.start_date).toLocaleDateString()}
               </Typography>
               <Typography variant="body1">
                 <strong>End Date:</strong>{" "}
-                {new Date(trip.end_date).toLocaleDateString()}
+                {new Date(thisTrip.end_date).toLocaleDateString()}
               </Typography>
               <Typography variant="body1">
-                <strong>Price:</strong> ${trip.price}
+                <strong>Price:</strong> ${thisTrip.price}
               </Typography>
               <Typography variant="body1">
-                <strong>Available Tickets:</strong> {trip.available_tickets} /{" "}
-                {trip.max_tickets}
+                <strong>Available Tickets:</strong> {thisTrip.available_tickets} /{" "}
+                {thisTrip.max_tickets}
               </Typography>
             </Box>
           </Grid>
@@ -185,7 +188,7 @@ export default function TripDetailsPage() {
                     sx={{ width: 200 }}
                   >
                     {Array.from(
-                      { length: trip.available_tickets },
+                      { length: thisTrip.available_tickets },
                       (_, i) => i + 1
                     ).map((num) => (
                       <MenuItem key={num} value={num}>
@@ -197,7 +200,7 @@ export default function TripDetailsPage() {
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
-                    disabled={trip.available_tickets === 0}
+                    disabled={thisTrip.available_tickets === 0}
                      sx={{ width: 200 }}
                   >
                     Order TIckets

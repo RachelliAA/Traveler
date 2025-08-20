@@ -20,6 +20,7 @@ export default function TripsPage({}) {
   const [filterText, setFilterText] = useState("");
   const [startDate, setStartDate] = useState("");
   const [availableTickets, setAvailableTickets] = useState(0);
+  const [maxPrice, setPrice] = useState(1000);
 
   const onTripClick = (trip) => {
     navigate(`/trip/${trip._id}`, {
@@ -52,8 +53,8 @@ export default function TripsPage({}) {
         : true;
 
       const matchesTickets = trip.available_tickets >= availableTickets;
-
-      return matchesText && matchesDate && matchesTickets;
+      const matchesPrice=trip.price<=maxPrice;
+      return matchesText && matchesDate && matchesTickets && matchesPrice;
     })
     .sort((a, b) => new Date(a.start_date) - new Date(b.start_date)); // default sort by start date
 
@@ -82,6 +83,8 @@ export default function TripsPage({}) {
             setStartDate={setStartDate}
             availableTickets={availableTickets}
             setAvailableTickets={setAvailableTickets}
+            maxPrice={maxPrice}
+            setPrice={setPrice}
           />
       {/* Content */}
 <Box sx={{ mt: 3 }}>

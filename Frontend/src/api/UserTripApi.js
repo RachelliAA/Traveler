@@ -54,8 +54,7 @@ export async function changeTripOrder(usertrip, trip, tickets){
     const err = await res.json();
     throw new Error(err.error || 'Failed to update user trip');
   }
-  const newTrip={...trip, available_tickets: trip.available_tickets-tickets}
-  updateTrip(trip._id, newTrip)
+  updateTrip(trip._id, trip)
 }
 
 
