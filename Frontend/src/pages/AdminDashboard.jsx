@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Container, Typography, Button, Box, CircularProgress, Alert } from "@mui/material";
 import TripList from "../components/TripList";
 import TripDetails from "../components/TripDetails";
@@ -14,6 +16,8 @@ export default function AdminDashboard({ user }) {
   const [mode, setMode] = useState("list"); // "list" | "details" | "add" | "edit"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   // Filters
   const [filterText, setFilterText] = useState("");
@@ -109,21 +113,20 @@ export default function AdminDashboard({ user }) {
           <TripList
             trips={filteredTrips}
             onSelectTrip={(trip) => {
-              setSelectedTrip(trip);
-              setMode("details");
+              navigate(`/adminTripDetails/${trip._id}`);
             }}
           />
         </>
       )}
 
-      {mode === "details" && selectedTrip && (
+      {/* {mode === "details" && selectedTrip && (
         <TripDetails
           trip={selectedTrip}
           onEditTrip={() => setMode("edit")}
           onBack={() => setMode("list")}
           onDeleteTrip={handleDeleteTrip}
         />
-      )}
+      )} */}
 
       {mode === "add" && (
         <TripForm

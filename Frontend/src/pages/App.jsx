@@ -8,6 +8,7 @@ import Register from "./Register";
 import RootPage from "./RootPage";
 import Footer from "../components/Footer";
 import EditProfile from "./EditProfile";
+import AdminTripDetails from "./AdminTripDetails";
 import { Box } from "@mui/material";
 
 export default function App() {
@@ -43,6 +44,8 @@ export default function App() {
           <Route path="/admin" element={<AdminDashboard user={user} />} />
           <Route path="/user-trips" element={<UserTrips />} />
           <Route path="/edit" element={<EditProfile />} />
+          <Route path="/adminTripDetails/:tripId" element={<AdminTripDetails />} />
+
         </Routes>
 
         {/* Fixed Footer */}
