@@ -25,15 +25,16 @@ router.get('/:id', async (req, res) => {
 
 
 
-// GET all trips (populate admin info)
+// GET all trips (populate admin info just the admins name)
 router.get('/', async (req, res) => {
   try {
-    const trips = await Trip.find().populate('admin_id').sort({ createdAt: -1 });
+    const trips = await Trip.find().populate('admin_id', 'name').sort({ createdAt: -1 });
     res.json(trips);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 // router.get('/:id', async (req, res) => {
 //   try {
 //     const { id } = req.params;

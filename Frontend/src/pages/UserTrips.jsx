@@ -7,6 +7,7 @@ import { fetchTripsofUser } from "../api/UserTripApi";
 import TripCard from "../components/TripCard";
 import ProfileDialog from "../components/Profile";
 import TripFilters from "../components/TripFilters";
+import ChatButton from "../components/ChatButton";
 
 export default function TripsPage({}) {
   const [tab, setTab] = useState(0);
@@ -59,7 +60,8 @@ export default function TripsPage({}) {
     .sort((a, b) => new Date(a.start_date) - new Date(b.start_date)); // default sort by start date
 
   return (
-    <> <Navbar onProfileClick={()=>setProfileOpen(true)} user={user}></Navbar>
+    <> 
+    <Navbar onProfileClick={()=>setProfileOpen(true)} user={user}></Navbar>
      <ProfileDialog
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
@@ -75,42 +77,54 @@ export default function TripsPage({}) {
           <Tab label="My Trips" />
         </Tabs>
       </Box>
- <TripFilters
- 
-            filterText={filterText}
-            setFilterText={setFilterText}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            availableTickets={availableTickets}
-            setAvailableTickets={setAvailableTickets}
-            maxPrice={maxPrice}
-            setPrice={setPrice}
-          />
+    <TripFilters
+      filterText={filterText}
+      setFilterText={setFilterText}
+      startDate={startDate}
+      setStartDate={setStartDate}
+      availableTickets={availableTickets}
+      setAvailableTickets={setAvailableTickets}
+      maxPrice={maxPrice}
+      setPrice={setPrice}
+    />
       {/* Content */}
-<Box sx={{ mt: 3 }}>
-  <Box
-    sx={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(216px, 216px))", // each card = max 200px
-      gap: 2,
-      justifyContent: "start", // align grid items left
-    }}
-  >
-    {displayedTrips.map((trip) => (
-      <Box key={trip.id} sx={{ width: 216 }}>
-        <TripCard trip={trip} onTripClick={() => onTripClick(trip)} />
+    <Box sx={{ mt: 3 }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(216px, 216px))", // each card = max 200px
+          gap: 2,
+          justifyContent: "start", // align grid items left
+        }}
+      >
+        {displayedTrips.map((trip) => (
+          <Box key={trip.id} sx={{ width: 216 }}>
+            <TripCard trip={trip} onTripClick={() => onTripClick(trip)} />
+          </Box>
+        ))}
+
+        {tab === 1 && myTrips.length === 0 && (
+          <Typography>No trips yet.</Typography>
+        )}
       </Box>
-    ))}
-
-    {tab === 1 && myTrips.length === 0 && (
-      <Typography>No trips yet.</Typography>
-    )}
-  </Box>
-</Box>
+    </Box>
 
 
+    <ChatButton userId={user._id} />
     </Container></>
   );
 }
 
 
+// /**
+//  * Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+//  * here will be home
+//       To Do
+//       make a profile component with user info
+//       at the beginning of page requests user from db or already gets it from login??
+//       sqaures with trips 
+//       different filters
+//       section with my trips
+//       notifications
+//  */
