@@ -8,6 +8,7 @@ import TripCard from "../components/TripCard";
 import ProfileDialog from "../components/Profile";
 import TripFilters from "../components/TripFilters";
 import ChatButton from "../components/ChatButton";
+import WeeklyWeather from "../components/WEather";
 
 export default function TripsPage({}) {
   const [tab, setTab] = useState(0);
@@ -25,7 +26,7 @@ export default function TripsPage({}) {
 
   const onTripClick = (trip) => {
     navigate(`/trip/${trip._id}`, {
-      state: { trip: trip, user: user, myTrip: tab==0? false:true },
+      state: { trip: trip, user: user, myTrip: tab==1? true:false },
     });
   };
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function TripsPage({}) {
   loadTrips();
 }, [user._id]);
 
-  const displayedTrips = (tab == 0 ? trips : myTrips)
+  const displayedTrips = (tab == 1 ? myTrips : trips)
     .filter((trip) => {
       const matchesText =
         trip.name.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -75,9 +76,11 @@ export default function TripsPage({}) {
         <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)}>
           <Tab label="Trips" />
           <Tab label="My Trips" />
+          <Tab label="Weather Forecast" />
         </Tabs>
       </Box>
-    <TripFilters
+      {tab==2? <WeeklyWeather/>:<>
+ <TripFilters
       filterText={filterText}
       setFilterText={setFilterText}
       startDate={startDate}
@@ -108,6 +111,8 @@ export default function TripsPage({}) {
         )}
       </Box>
     </Box>
+      </>}
+   
 
 
     <ChatButton userId={user._id} />

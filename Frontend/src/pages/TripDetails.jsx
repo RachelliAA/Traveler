@@ -219,6 +219,7 @@ export default function TripDetailsPage() {
                     sx={{ width: 200 }}
                   >
                     Order Tickets
+                    Order Tickets
                   </Button>
                 </>
               )}
