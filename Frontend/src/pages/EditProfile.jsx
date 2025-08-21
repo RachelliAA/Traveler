@@ -124,7 +124,7 @@ function EditProfile() {
             </Button>
 
             <Button
-              onClick={() => navigate(`/user-trips`)}
+              onClick={() => navigate(-1)}
               variant="contained"
               sx={{ flex: 1, py: 1.2 }}
             >

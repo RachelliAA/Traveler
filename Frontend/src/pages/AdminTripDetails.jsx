@@ -10,6 +10,7 @@ export default function AdminTripDetails() {
   const navigate = useNavigate();
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
     async function fetchTrip() {
