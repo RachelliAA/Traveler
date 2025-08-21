@@ -164,7 +164,7 @@ export default function TripDetailsPage() {
                     color="primary"
                     onClick={() => setOpenAddTickets(true)}
                     sx={{width: "210px"}}
-                    disabled={thisTrip.available_tickets=0}
+                    disabled={thisTrip.available_tickets == 0}
                   >
                     Order more tickets
                   </Button>
@@ -205,10 +205,10 @@ export default function TripDetailsPage() {
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
-                    disabled={thisTrip.available_tickets === 0}
+                    disabled={thisTrip.available_tickets == 0}
                      sx={{ width: 200 }}
                   >
-                    Order TIckets
+                    Order Tickets
                   </Button>
                 </>
               )}
@@ -327,11 +327,7 @@ export default function TripDetailsPage() {
 /***
  * TO DO
  * cancel/order pop up are you sure
- * sign up payment page
  * add admin name to details
  * weather
- * fix button when available is 0
  * filters, location is admin render different stuff
- * chatbot put on all pages
- * taking off the 
  */
