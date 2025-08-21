@@ -15,13 +15,15 @@ import { updateUser } from "../api/usersApi";
 function EditProfile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state || {};
+  // const { id } = location.state || {};
+  const id = JSON.parse(localStorage.getItem("loggedInUser"))._id;
 
   const [person, setPerson] = useState({});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   useEffect(() => {
     async function loadUser() {
+      console.log("Loading user details for ID:", id);
       setPerson(await fetchUserById(id));
     }
 
