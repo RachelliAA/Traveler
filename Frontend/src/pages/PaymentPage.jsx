@@ -19,6 +19,7 @@ export default function PaymentPage() {
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   if (!trip || !tickets || !user) {
     return (
@@ -31,15 +32,19 @@ export default function PaymentPage() {
   const totalAmount = trip.price * tickets;
 
   const handlePayment = () => {
-    // Mock payment processing
+    // Mock payment validation
     if (cardNumber.length >= 12 && cvv.length >= 3) {
       setSuccess(true);
 
       setTimeout(() => {
-        navigate("/user-trips", { replace: true });
-      }, 2000); // after 2s, redirect back
+        // ✅ return to TripDetailsPage with success flag
+        navigate(`/trip/${trip._id}`, {
+          state: { trip, tickets, user, paymentSuccess: true },
+          replace: true,
+        });
+      }, 2000);
     } else {
-      alert("Please enter valid payment details.");
+      setError("Please enter valid payment details.");
     }
   };
 
@@ -70,6 +75,8 @@ export default function PaymentPage() {
                 fullWidth
                 type="password"
               />
+
+              {error && <Alert severity="error">{error}</Alert>}
 
               <Button
                 variant="contained"

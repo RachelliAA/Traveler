@@ -12,7 +12,6 @@ import {
   IconButton,
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-// import ProfileDialog from "../components/Profile";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
@@ -27,40 +26,59 @@ import TicketOrderDialog from "../components/AddTickets";
 export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { trip, user, myTrip } = location.state || {};
-  const [thisTrip, setThisTrip]=useState(trip)
-  const [tickets, setTickets] = useState(1);
-  const [profileOpen, setProfileOpen] = useState(false);
+
+  const { trip, user, myTrip, tickets: initTickets, paymentSuccess } =
+    location.state || {};
+
+  const [tickets, setTickets] = useState(initTickets || 1);
   const [usertrip, setUsertrip] = useState({});
   const [openAddTickets, setOpenAddTickets] = useState(false);
 
   // For images pagination
   const [currentPage, setCurrentPage] = useState(0);
   const imagesPerPage = 4;
-  const totalPages = Math.ceil((trip.images?.length || 0) / imagesPerPage);
- async function getNumberOfTickets() {
+  const totalPages = Math.ceil((trip?.images?.length || 0) / imagesPerPage);
+
+  const [thisTrip, setThisTrip] = useState(trip || {});
+
+  async function getNumberOfTickets() {
+    if (user && trip) {
       setUsertrip(await fetchUserTrip(user._id, trip._id));
     }
+  }
+
   useEffect(() => {
-   
     if (myTrip) {
       getNumberOfTickets();
     }
   }, [openAddTickets]);
 
-  // const handleSignUp = async () => {
-  //   const userTrip = {
-  //     trip_id: trip._id,
-  //     user_id: user._id,
-  //     number_of_tickets: tickets,
-  //   };
-  //   await addUserToTrip(userTrip, trip);
-  //   navigate("/user-trips");
-  // };
-  const handleSignUp = () => {
+  // 🔥 Payment callback logic stays here (not in PaymentPage)
+  useEffect(() => {
+    const finalizePayment = async () => {
+      if (paymentSuccess && tickets) {
+        try {
+          const userTrip = {
+            trip_id: trip._id,
+            user_id: user._id,
+            number_of_tickets: tickets,
+          };
+          await addUserToTrip(userTrip, trip);
+
+          alert("Payment successful! Redirecting to My Trips...");
+          navigate("/user-trips");
+        } catch (err) {
+          alert("Error finalizing order: " + err.message);
+        }
+      }
+    };
+
+    finalizePayment();
+  }, [paymentSuccess, tickets, trip, user, navigate]);
+
+  const handleSignUp = async () => {
     navigate("/payment", { state: { trip, tickets, user } });
   };
-
 
   const handleDelete = async () => {
     await cancelTripOrder(usertrip, trip);
@@ -68,10 +86,13 @@ export default function TripDetailsPage() {
   };
 
   const handleOrderTickets = async (tickets_num) => {
-  const newTrip={...trip, available_tickets: trip.available_tickets-tickets_num}
+    const newTrip = {
+      ...trip,
+      available_tickets: trip.available_tickets - tickets_num,
+    };
     await changeTripOrder(usertrip, newTrip, tickets_num);
-    setThisTrip(newTrip)
-    getNumberOfTickets()
+    setThisTrip(newTrip);
+    getNumberOfTickets();
   };
 
   // Navigate images
@@ -93,22 +114,11 @@ export default function TripDetailsPage() {
   return (
     <>
       {/* Navbar */}
-      <Navbar onProfileClick={() => setProfileOpen(true)} user={user} />
-      {/* <ProfileDialog
-        open={profileOpen}
-        onClose={() => setProfileOpen(false)}
-        user={user}
-      /> */}
+      <Navbar user={user} />
 
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         {/* Trip Info + Sign Up Side by Side */}
-        <Grid
-          container
-          spacing={12}
-          sx={{
-            alignItems: "flex-start", // align top edges
-          }}
-        >
+        <Grid container spacing={12} sx={{ alignItems: "flex-start" }}>
           {/* Left Side: Trip Info */}
           <Grid item xs={12} md={7}>
             <Typography variant="h4" gutterBottom>
@@ -151,20 +161,20 @@ export default function TripDetailsPage() {
               {myTrip ? (
                 <>
                   <Typography
-  variant="h6" // Bigger text size
-  align="center" // Centers the text horizontally
-  sx={{ fontWeight: "bold", mt: 2 }}
->
-  You ordered {usertrip.number_of_tickets}{" "}
-  {usertrip.number_of_tickets > 1 ? "tickets" : "ticket"}
-</Typography>
+                    variant="h6"
+                    align="center"
+                    sx={{ fontWeight: "bold", mt: 2 }}
+                  >
+                    You ordered {usertrip.number_of_tickets}{" "}
+                    {usertrip.number_of_tickets > 1 ? "tickets" : "ticket"}
+                  </Typography>
 
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => setOpenAddTickets(true)}
-                    sx={{width: "210px"}}
-                    disabled={thisTrip.available_tickets == 0}
+                    sx={{ width: "210px" }}
+                    disabled={thisTrip.available_tickets === 0}
                   >
                     Order more tickets
                   </Button>
@@ -172,12 +182,14 @@ export default function TripDetailsPage() {
                     open={openAddTickets}
                     onClose={() => setOpenAddTickets(false)}
                     onOrder={handleOrderTickets}
+                    trip={trip}      // ✅ pass trip
+                    user={user}  
                   />
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={handleDelete}
-                    sx={{width: "210px"}}
+                    sx={{ width: "210px" }}
                   >
                     Cancel order
                   </Button>
@@ -205,8 +217,8 @@ export default function TripDetailsPage() {
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
-                    disabled={thisTrip.available_tickets == 0}
-                     sx={{ width: 200 }}
+                    disabled={thisTrip.available_tickets === 0}
+                    sx={{ width: 200 }}
                   >
                     Order Tickets
                   </Button>
@@ -218,8 +230,7 @@ export default function TripDetailsPage() {
 
         <Divider sx={{ my: 4 }} />
 
-        {/* Pictures Section with arrows */}
-              {/* Pictures Section with horizontal scrolling */}
+        {/* Pictures Section with horizontal scrolling */}
         <Box sx={{ mb: 5, position: "relative" }}>
           <Typography variant="h6" gutterBottom>
             Pictures
@@ -231,7 +242,10 @@ export default function TripDetailsPage() {
               <IconButton
                 onClick={() => {
                   const container = document.getElementById("pictures-scroll");
-                  container.scrollBy({ left: -container.clientWidth, behavior: "smooth" });
+                  container.scrollBy({
+                    left: -container.clientWidth,
+                    behavior: "smooth",
+                  });
                 }}
                 sx={{
                   position: "absolute",
@@ -253,7 +267,7 @@ export default function TripDetailsPage() {
                   overflowX: "auto",
                   gap: 2,
                   scrollBehavior: "smooth",
-                  "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
+                  "&::-webkit-scrollbar": { display: "none" },
                 }}
               >
                 {trip.images.map((img, idx) => (
@@ -270,7 +284,11 @@ export default function TripDetailsPage() {
                       component="img"
                       image={img}
                       alt={`Trip image ${idx + 1}`}
-                      sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   </Card>
                 ))}
@@ -280,7 +298,10 @@ export default function TripDetailsPage() {
               <IconButton
                 onClick={() => {
                   const container = document.getElementById("pictures-scroll");
-                  container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
+                  container.scrollBy({
+                    left: container.clientWidth,
+                    behavior: "smooth",
+                  });
                 }}
                 sx={{
                   position: "absolute",
@@ -308,7 +329,6 @@ export default function TripDetailsPage() {
           )}
         </Box>
 
-
         <Divider sx={{ mb: 4 }} />
 
         {/* About Section */}
@@ -324,10 +344,3 @@ export default function TripDetailsPage() {
     </>
   );
 }
-/***
- * TO DO
- * cancel/order pop up are you sure
- * add admin name to details
- * weather
- * filters, location is admin render different stuff
- */

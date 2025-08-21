@@ -9,6 +9,7 @@ const tripRoutes = require('./routes/tripsRoute');
 const userTripRoutes = require('./routes/userTripsRoute');
 const weatherRoute = require('./routes/weatherRoute');
 
+const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,8 @@ async function start() {
     app.use("/chat", chatBoxRoute);
     app.use("/weather", weatherRoute);
 
+
+    app.use("/api/email", emailRoutes);
 
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   } catch (err) {

@@ -265,6 +265,7 @@
 //   );
 // }
 
+//this page is where the admin does new trip creation and updates existing trips
 import { useState, useEffect } from "react";
 import { Box, TextField, MenuItem, Button, Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -286,6 +287,8 @@ export default function TripForm({ onSubmit, onCancel, initialData = {} }) {
 
   const [tripDays, setTripDays] = useState("---");
   const [newImageUrl, setNewImageUrl] = useState("");
+
+  const today = new Date().toISOString().split("T")[0];
 
   const locations = [
     "north", "south", "east",
@@ -340,8 +343,8 @@ export default function TripForm({ onSubmit, onCancel, initialData = {} }) {
       <TextField name="available_tickets" type="number" label="Available Tickets" value={formData.available_tickets} onChange={handleChange} />
       <TextField name="price" type="number" label="Price" value={formData.price} onChange={handleChange} required />
 
-      <TextField name="start_date" type="date" label="Start Date" value={formData.start_date} onChange={handleChange} InputLabelProps={{ shrink: true }} required />
-      <TextField name="end_date" type="date" label="End Date" value={formData.end_date} onChange={handleChange} InputLabelProps={{ shrink: true }} required inputProps={{ min: formData.start_date || undefined }} />
+      <TextField name="start_date" type="date" label="Start Date" value={formData.start_date} onChange={handleChange} InputLabelProps={{ shrink: true }}  inputProps={{ min: today }} required />
+      <TextField name="end_date" type="date" label="End Date" value={formData.end_date} onChange={handleChange} InputLabelProps={{ shrink: true }} required inputProps={{ min: formData.start_date || today }} />
 
       {/* 🔹 Show calculated days */}
       <Typography variant="body2" color="primary">Trip length: {tripDays} days</Typography>

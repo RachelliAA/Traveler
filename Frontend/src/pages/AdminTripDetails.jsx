@@ -91,7 +91,7 @@ export default function AdminTripDetails() {
         <Divider sx={{ my: 2 }} />
 
         <Typography variant="h6">Travelers</Typography>
-        <TravelersList tripId={trip._id} />
+        <TravelersList tripId={trip._id} tripName={trip.name} />
       </CardContent>
     </Card>
   );
