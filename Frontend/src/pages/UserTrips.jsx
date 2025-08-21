@@ -1,14 +1,15 @@
-import { Container, Box, Tabs, Tab, Typography } from "@mui/material";
+import { Container, Box, Tabs, Tab, Typography, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { fetchTrips } from "../api/tripsApi";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { fetchTripsofUser } from "../api/UserTripApi";
-import TripCard from "../components/TripCard";
+import { fetchTripsofUser } from "../api/userTripApi";
 import ProfileDialog from "../components/Profile";
 import TripFilters from "../components/TripFilters";
 import ChatButton from "../components/ChatButton";
 import WeeklyWeather from "../components/WEather";
+import UserTrips from "../components/TripCardsGrid";
+import { fetchTenTrips } from "../api/tripsApi";
 
 export default function TripsPage({}) {
   const [tab, setTab] = useState(0);
@@ -16,7 +17,6 @@ export default function TripsPage({}) {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-  const [trips, setTrips] = useState([]);
   const [myTrips, setMyTrips] = useState([]);
   //filters:
   const [filterText, setFilterText] = useState("");
@@ -24,27 +24,68 @@ export default function TripsPage({}) {
   const [availableTickets, setAvailableTickets] = useState(0);
   const [maxPrice, setPrice] = useState(1000);
 
-  const onTripClick = (trip) => {
-    navigate(`/trip/${trip._id}`, {
-      state: { trip: trip, user: user, myTrip: tab==1? true:false },
-    });
-  };
+    const [trips, setTrips] = useState([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-  async function loadTrips() {
-    const fetchedTrips = await fetchTrips();
+  async function loadMyTrips() {
+    // Only fetch the trips the user has booked, nothing else
     const fetchedMyTrips = await fetchTripsofUser(user._id);
-
-    const myTripIds = new Set(fetchedMyTrips.map(trip => trip._id));
-    const availableTrips = fetchedTrips.filter(trip => !myTripIds.has(trip._id));
-
-    setTrips(availableTrips);
     setMyTrips(fetchedMyTrips);
-
   }
-  loadTrips();
-}, [user._id]);
 
-  const displayedTrips = (tab == 1 ? myTrips : trips)
+  async function loadInitialTrips() {
+    const savedTrips = localStorage.getItem("trips");
+
+    if (savedTrips) {
+      const { trips: storedTrips, total: storedTotal, page: storedPage } = JSON.parse(savedTrips);
+      setTrips(storedTrips);
+      setTotal(storedTotal);
+      setPage(storedPage);
+    } else {
+      // If nothing stored, load first 5 trips
+      await loadMoreTrips(1);
+    }
+  }
+
+  loadMyTrips();
+  loadInitialTrips();
+}, []);
+
+const loadMoreTrips = async (nextPage = page) => {
+  if (loading) return;
+  setLoading(true);
+  try {
+    const { trips: newTrips, total: totalTrips } = await fetchTenTrips(nextPage, 5);
+
+    const updatedTrips = nextPage === 1 ? newTrips : [...trips, ...newTrips];
+    setTrips(updatedTrips);
+    setTotal(totalTrips);
+    setPage(nextPage);
+
+    localStorage.setItem(
+      "trips",
+      JSON.stringify({
+        trips: updatedTrips,
+        total: totalTrips,
+        page: nextPage,
+      })
+    );
+  } catch (err) {
+    console.error("Failed to load trips:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+ const onTripClick = (trip) => {
+      navigate(`/trip/${trip._id}`, {
+        state: { trip: trip, user: user, myTrip: myTrips.some(mt => mt._id === trip._id)}
+      });
+    };
+  const displayedTrips = (tab==1? myTrips: trips)
     .filter((trip) => {
       const matchesText =
         trip.name.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -91,26 +132,32 @@ export default function TripsPage({}) {
       setPrice={setPrice}
     />
       {/* Content */}
-    <Box sx={{ mt: 3 }}>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(216px, 216px))", // each card = max 200px
-          gap: 2,
-          justifyContent: "start", // align grid items left
-        }}
-      >
-        {displayedTrips.map((trip) => (
-          <Box key={trip.id} sx={{ width: 216 }}>
-            <TripCard trip={trip} onTripClick={() => onTripClick(trip)} />
-          </Box>
-        ))}
+<UserTrips displayedTrips={displayedTrips} onTripClick={onTripClick} />
 
-        {tab === 1 && myTrips.length === 0 && (
-          <Typography>No trips yet.</Typography>
-        )}
-      </Box>
-    </Box>
+{tab === 0 && trips.length < total && (
+  <Box sx={{ display: "flex", justifyContent: "center", mt: 4, mb: 4 }}>
+    <Button
+      onClick={() => loadMoreTrips(page + 1)}
+      disabled={loading}
+      variant="contained"
+      color="primary"
+      sx={{
+        px: 4,
+        py: 1.5,
+        fontSize: "1rem",
+        fontWeight: "bold",
+        borderRadius: "12px",
+        boxShadow: 3,
+        "&:hover": {
+          boxShadow: 6,
+        },
+      }}
+    >
+      {loading ? "Loading..." : "Load More"}
+    </Button>
+  </Box>
+)}
+
       </>}
    
 
@@ -119,17 +166,3 @@ export default function TripsPage({}) {
     </Container></>
   );
 }
-
-
-// /**
-//  * Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-
-//  * here will be home
-//       To Do
-//       make a profile component with user info
-//       at the beginning of page requests user from db or already gets it from login??
-//       sqaures with trips 
-//       different filters
-//       section with my trips
-//       notifications
-//  */

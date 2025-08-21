@@ -1,40 +1,52 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Grid,
   Card,
   CardContent,
   Typography,
   CircularProgress,
   Box,
 } from "@mui/material";
-
+import { fetchWeatherForCity } from "../api/weatherApi";
 const WeeklyWeather = () => {
-  const [forecast, setForecast] = useState([]);
+  const [forecasts, setForecasts] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const API_KEY = "YOUR_API_KEY"; // ← Paste your WeatherAPI key here
-  const CITY = "Jerusalem";
+  const API_KEY = "7e044f66120149f6ade224715252008"; // <-- Put your WeatherAPI key here
+  const CITIES = ["Jerusalem", "Haifa", "Be'er Sheva"];
 
   useEffect(() => {
-    const fetchWeather = async () => {
+    //   try {
+    //     const results = {};
+    //     for (const city of CITIES) {
+    //       const url = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${encodeURIComponent(
+    //         city
+    //       )}&days=7&aqi=no&alerts=no`;
+
+    //       const res = await fetch(url);
+    //       if (!res.ok) throw new Error(`Failed to fetch weather for ${city}`);
+    //       const data = await res.json();
+    //       results[city] = data.forecast.forecastday;
+    //     }
+    //     setForecasts(results);
+    //   } catch (err) {
+    //     console.error("Error fetching weather:", err);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    async function  setWeather() {
       try {
-        const url = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${CITY}&days=7&aqi=no&alerts=no`;
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch weather data");
+        const results = {};
+        for (const city of CITIES) {
+          results[city] = await fetchWeatherForCity(city);
         }
-
-        const data = await res.json();
-        setForecast(data.forecast.forecastday);
+        setForecasts(results);
       } catch (err) {
         console.error("Error fetching weather:", err);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchWeather();
+    }
+    setWeather();
   }, []);
 
   if (loading) {
@@ -46,63 +58,77 @@ const WeeklyWeather = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: "1200px", margin: "auto", mt: 3, p: 2 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        7-Day Weather Forecast for Jerusalem
-      </Typography>
+    <Box sx={{ maxWidth: "1400px", margin: "auto", mt: 3, p: 2 }}>
+      {CITIES.map((city) => (
+        <Box key={city} sx={{ mb: 5 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            7-Day Weather Forecast for {city}
+          </Typography>
 
-      <Grid container spacing={2}>
-        {forecast.map((day, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card
-              sx={{
-                textAlign: "center",
-                p: 2,
-                borderRadius: 3,
-                boxShadow: 3,
-                transition: "transform 0.2s",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                  boxShadow: 6,
-                },
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6">
-                  {new Date(day.date).toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              justifyContent: "space-between",
+            }}
+          >
+            {forecasts[city]?.map((day, index) => (
+              <Card
+                key={index}
+                sx={{
+                  flex: "1 1 0", // Grow/shrink equally
+                  maxWidth: "calc(100% / 7)", // 7 cards per row
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  textAlign: "center",
+                  p: 1.5,
+                  borderRadius: 3,
+                  boxShadow: 3,
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                    {new Date(day.date).toLocaleDateString("en-GB", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </Typography>
 
-                <Box
-                  component="img"
-                  src={day.day.condition.icon}
-                  alt={day.day.condition.text}
-                  sx={{ width: 80, height: 80, my: 1 }}
-                />
+                  <Box
+                    component="img"
+                    src={day.day.condition.icon}
+                    alt={day.day.condition.text}
+                    sx={{ width: 60, height: 60, my: 1 }}
+                  />
 
-                <Typography variant="h5">
-                  {Math.round(day.day.avgtemp_c)}°C
-                </Typography>
+                  <Typography variant="h6">
+                    {Math.round(day.day.avgtemp_c)}°C
+                  </Typography>
 
-                <Typography variant="body1" color="text.secondary">
-                  {day.day.condition.text}
-                </Typography>
+                  <Typography variant="body2" color="text.secondary" noWrap>
+                    {day.day.condition.text}
+                  </Typography>
 
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  🌡 Min: {Math.round(day.day.mintemp_c)}° | Max:{" "}
-                  {Math.round(day.day.maxtemp_c)}°
-                </Typography>
-                <Typography variant="body2">
-                  💧 {day.day.daily_chance_of_rain}% chance of rain
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    🌡 Min: {Math.round(day.day.mintemp_c)}° | Max:{" "}
+                    {Math.round(day.day.maxtemp_c)}°
+                  </Typography>
+                  <Typography variant="body2">
+                    💧 {day.day.daily_chance_of_rain}% rain
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 };

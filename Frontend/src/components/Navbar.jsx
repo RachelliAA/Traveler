@@ -10,6 +10,7 @@ export default function Navbar({ user }) {
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("trips");
     window.location.href = "/"; // safer than navigate("/") from deep inside
   };
 

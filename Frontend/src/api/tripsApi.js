@@ -6,6 +6,15 @@ export async function fetchTrips() {
   if (!res.ok) throw new Error('Failed to fetch trips');
   return res.json();
 }
+// frontend: api/tripsApi.js
+
+export async function fetchTenTrips(page = 1, limit = 10) {
+  const res = await fetch(`${BASE_URL}/ten?limit=${limit}&page=${page}`);
+  if (!res.ok) throw new Error("Failed to fetch trips");
+  return res.json(); // Returns { trips, total }
+}
+
+
 
 export async function fetchTripById(id) {
   try {

@@ -11,7 +11,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { fetchTravelersOfTrip } from "../api/UserTripApi";
+import { fetchTravelersOfTrip } from "../api/userTripApi";
 //Frontend\src\api\UserTripApi.js
 
 export default function TravelersList({ tripId }) {

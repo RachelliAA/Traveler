@@ -21,7 +21,7 @@ import {
   cancelTripOrder,
   changeTripOrder,
   fetchUserTrip,
-} from "../api/UserTripApi";
+} from "../api/userTripApi";
 import TicketOrderDialog from "../components/AddTickets";
 
 export default function TripDetailsPage() {
