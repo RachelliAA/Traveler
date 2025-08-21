@@ -12,6 +12,8 @@ import AdminTripDetails from "./AdminTripDetails";
 import PaymentPage from "./PaymentPage";
 import { Box } from "@mui/material";
 import ProfileDialog from "../components/Profile";
+import NotFoundPage from "./NotFoundPage";
+
 export default function App() {
   const mockAdmin = { id: "1", name: "Admin", role: "admin" };
   const [user, setUser] = useState(
@@ -48,6 +50,8 @@ export default function App() {
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/adminTripDetails/:tripId" element={<AdminTripDetails />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+
 
         </Routes>
 

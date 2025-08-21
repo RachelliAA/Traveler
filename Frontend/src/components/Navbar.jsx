@@ -26,8 +26,11 @@ export default function Navbar({ user }) {
             <ArrowBackIosNewRoundedIcon />
           </IconButton>
 
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          {/* <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Welcome{user?.name ? `, ${user.name}` : ""}
+          </Typography> */}
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Welcome{user?.name ? `, ${user.name}` : ""}{user?.is_admin ? " (admin)" : ""}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />

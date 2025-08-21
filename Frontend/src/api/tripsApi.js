@@ -45,8 +45,9 @@ export async function fetchTripsByAdmin(adminId) {
 }
 
 
-// Add a new trip
+// post Add a new trip
 export async function addTrip(tripData) {
+  console.log("Adding trip:", tripData);
   const res = await fetch(BASE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

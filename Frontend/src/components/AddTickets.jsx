@@ -9,13 +9,19 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const TicketOrderDialog = ({ open, onClose, onOrder }) => {
+const TicketOrderDialog = ({ open, onClose, trip, user }) => {
   const [ticketCount, setTicketCount] = useState(1);
+  const navigate = useNavigate();
 
   const handleOrder = () => {
-    onOrder(ticketCount); // Trigger the order function with selected tickets
-    onClose();           // Close the popup after ordering
+    onClose(); // Close the popup first
+
+    // Navigate to payment page with trip, user, and tickets
+    navigate("/payment", {
+      state: { trip, tickets: ticketCount, user },
+    });
   };
 
   return (
@@ -30,7 +36,7 @@ const TicketOrderDialog = ({ open, onClose, onOrder }) => {
             type="number"
             value={ticketCount}
             onChange={(e) => setTicketCount(Number(e.target.value))}
-            inputProps={{ min: 1 }}
+            inputProps={{ min: 1, max: trip.available_tickets }}
             sx={{ width: "100px", mt: 1 }}
           />
         </Box>

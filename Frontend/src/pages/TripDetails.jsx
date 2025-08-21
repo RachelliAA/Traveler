@@ -182,6 +182,8 @@ export default function TripDetailsPage() {
                     open={openAddTickets}
                     onClose={() => setOpenAddTickets(false)}
                     onOrder={handleOrderTickets}
+                    trip={trip}      // ✅ pass trip
+                    user={user}  
                   />
                   <Button
                     variant="contained"
@@ -218,7 +220,6 @@ export default function TripDetailsPage() {
                     disabled={thisTrip.available_tickets === 0}
                     sx={{ width: 200 }}
                   >
-                    Order Tickets
                     Order Tickets
                   </Button>
                 </>
