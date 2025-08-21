@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Container, Typography, Button, Box, CircularProgress, Alert } from "@mui/material";
 import TripList from "../components/TripList";
-import TripDetails from "../components/TripDetails";
+//import TripDetails from "../components/TripDetails";
 import TripForm from "../components/TripForm";
 import TripFilters from "../components/TripFilters";
 import ChatButton from "../components/ChatButton";
