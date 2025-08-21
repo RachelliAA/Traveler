@@ -15,6 +15,7 @@ export async function fetchUsers() {
 // }
 export async function fetchUserById(id) {
   try {
+    console.log("trying to fetch user details for ID:", id);
     const res = await fetch(`${BASE_URL}/${id}`);
     if (!res.ok) {
       const errorData = await res.json(); 

@@ -3,12 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Box, Divider } from "@mui/material";
 import TravelersList from "../components/TravelersList";
 import { fetchTripById, deleteTrip, updateTrip } from "../api/tripsApi"; // make sure you have these
+import Navbar from "../components/Navbar";
 
 export default function AdminTripDetails() {
   const { tripId } = useParams();
   const navigate = useNavigate();
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
     async function fetchTrip() {
@@ -36,6 +38,7 @@ export default function AdminTripDetails() {
 
   return (
     <Card>
+      <Navbar user={user}   />
       <CardContent>
         <Typography variant="h5">{trip.name}</Typography>
         <Typography variant="subtitle1">{trip.location}</Typography>

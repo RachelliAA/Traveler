@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import ProfileDialog from "../components/Profile";
+// import ProfileDialog from "../components/Profile";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
@@ -94,11 +94,11 @@ export default function TripDetailsPage() {
     <>
       {/* Navbar */}
       <Navbar onProfileClick={() => setProfileOpen(true)} user={user} />
-      <ProfileDialog
+      {/* <ProfileDialog
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
         user={user}
-      />
+      /> */}
 
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         {/* Trip Info + Sign Up Side by Side */}
