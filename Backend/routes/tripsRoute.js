@@ -173,18 +173,41 @@ router.get("/ten", async (req, res) => {
   }
 });
 
-// ✅ GET ALL TRIPS — fallback if needed
-router.get("/", async (req, res) => {
+// // ✅ GET ALL TRIPS — fallback if needed
+// router.get("/", async (req, res) => {
+//   try {
+//     const trips = await Trip.find({});
+//     res.json(trips);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+// GET all trips (populate admin info just the admins name)
+router.get('/', async (req, res) => {
   try {
-    const trips = await Trip.find({});
+    const trips = await Trip.find().populate('admin_id', 'name').sort({ createdAt: -1 });
     res.json(trips);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ GET ONE TRIP BY ID — MUST COME LAST
+// GET trips by admin ID
+router.get("/admin/:adminId", async (req, res) => {
+  const { adminId } = req.params;
+
+  try {
+    const trips = await Trip.find({ admin_id: adminId }).sort({ start_date: 1 });
+    res.json(trips);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch trips" });
+  }
+});
+
+// ✅ GET ONE TRIP BY trip ID — MUST COME LAST
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;

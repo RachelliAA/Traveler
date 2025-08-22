@@ -27,8 +27,24 @@ export default function TripDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Try to get state from navigation
   const { trip, user, myTrip, tickets: initTickets, paymentSuccess } =
     location.state || {};
+
+  useEffect(() => {
+    // If there is no user in state or localStorage, redirect to login
+    const storedUser = localStorage.getItem("user");
+    if (!user && !storedUser) {
+      alert("You must be logged in to view trip details.");
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+  // If we redirected, don't render the page
+  if (!user && !localStorage.getItem("user")) {
+    return <Typography>Redirecting to login...</Typography>;
+  }
+
 
   const [tickets, setTickets] = useState(initTickets || 1);
   const [usertrip, setUsertrip] = useState({});

@@ -15,6 +15,7 @@ export default function Navbar({ user }) {
   };
 
   const handleBack = () => {
+    console.log("window history", window.history);
     window.history.back();
   };
 

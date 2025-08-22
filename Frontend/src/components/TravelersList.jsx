@@ -219,7 +219,16 @@ export default function TravelersList({ tripId, tripName }) {
               <TableCell>Purchase Date</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody
+            sx={{
+              "& .MuiTableRow-root:nth-of-type(odd)": {
+                backgroundColor: "white",
+              },
+              "& .MuiTableRow-root:nth-of-type(even)": {
+                backgroundColor: "#7fa1c6ff", // light blue
+              },
+            }}
+          >
             {travelers.map((t) => (
               <TableRow key={t._id}>
                 <TableCell>{t.user_id?._id}</TableCell>

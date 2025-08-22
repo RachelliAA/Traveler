@@ -13,7 +13,19 @@ export default function TripList({ trips, onSelectTrip }) {
             <TableCell>Available Tickets</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody
+            sx={{
+              "& .MuiTableRow-root:nth-of-type(odd)": {
+                backgroundColor: "white",
+              },
+              "& .MuiTableRow-root:nth-of-type(even)": {
+                backgroundColor: "#e6f2ff", // light blue
+              },
+              "& .MuiTableRow-root:hover": {
+                backgroundColor: "#d0e7ff", // darker blue on hover
+              },
+            }}
+          >
           {trips.map((trip) => (
             <TableRow
               key={trip._id}
