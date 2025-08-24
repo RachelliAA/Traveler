@@ -8,6 +8,7 @@ import TravelersList from "../components/TravelersList";
 import { fetchTripById, deleteTrip, updateTrip } from "../api/tripsApi";
 import Navbar from "../components/Navbar";
 import TripForm from "../components/TripForm";
+import ChatButton from "../components/ChatButton";
 
 export default function AdminTripDetails() {
   const { tripId } = useParams();
@@ -63,6 +64,7 @@ export default function AdminTripDetails() {
   return (
     <Card>
       <Navbar user={user} />
+      <ChatButton userId={user._id} />
       <CardContent>
         {editing ? (
           <TripForm
