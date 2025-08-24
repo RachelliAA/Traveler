@@ -15,24 +15,6 @@ const WeeklyWeather = () => {
   const CITIES = ["Jerusalem", "Haifa", "Be'er Sheva"];
 
   useEffect(() => {
-    //   try {
-    //     const results = {};
-    //     for (const city of CITIES) {
-    //       const url = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${encodeURIComponent(
-    //         city
-    //       )}&days=7&aqi=no&alerts=no`;
-
-    //       const res = await fetch(url);
-    //       if (!res.ok) throw new Error(`Failed to fetch weather for ${city}`);
-    //       const data = await res.json();
-    //       results[city] = data.forecast.forecastday;
-    //     }
-    //     setForecasts(results);
-    //   } catch (err) {
-    //     console.error("Error fetching weather:", err);
-    //   } finally {
-    //     setLoading(false);
-    //   }
     async function  setWeather() {
       try {
         const results = {};

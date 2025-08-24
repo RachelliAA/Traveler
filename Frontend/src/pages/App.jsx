@@ -40,7 +40,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<RootPage />} />
           <Route path="/trip/:tripId" element={<TripDetails />} />
-          {/* <Route path="/profile" element={<div>Profile Page</div>} /> */}
           <Route path="/profile" element={<ProfileDialog/>} />
           <Route path="/UserTrips" element={<UserTrips />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />

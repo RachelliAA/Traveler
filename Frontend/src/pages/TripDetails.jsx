@@ -15,7 +15,12 @@ import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { addUserToTrip, cancelTripOrder, fetchUserTrip } from "../api/UserTripApi";
+//import { addUserToTrip, cancelTripOrder, fetchUserTrip } from "../api/UserTripApi";
+import {
+  addUserToTrip,
+  cancelTripOrder,
+  fetchUserTrip,
+} from "../api/userTripApi";
 import TicketOrderDialog from "../components/AddTickets";
 
 export default function TripDetailsPage() {
