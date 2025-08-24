@@ -55,7 +55,7 @@ export default function RootPage() {
         }}
       >
         <Typography variant="h2" fontWeight="bold" gutterBottom>
-          Traveler Co.
+          The Traveler
         </Typography>
 
         <Stack spacing={2} direction="column" alignItems="center">

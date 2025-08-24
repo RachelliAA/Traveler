@@ -317,6 +317,7 @@ export default function AdminDashboard({ user }) {
   const [filterText, setFilterText] = useState("");
   const [startDate, setStartDate] = useState("");
   const [availableTickets, setAvailableTickets] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(500);  
 
   const navigate = useNavigate();
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -365,11 +366,12 @@ export default function AdminDashboard({ user }) {
         : true;
 
       const matchesTickets = trip.available_tickets >= availableTickets;
+      const matchesPrice = trip.price <= maxPrice; // ✅ include price filter
 
-      return matchesText && matchesDate && matchesTickets;
+      return matchesText && matchesDate && matchesTickets && matchesPrice;
     })
     .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-
+    
   return (
     <Container sx={{ mt: 4 }}>
       <Navbar user={user} onProfileClick={() => navigate("/profile")} />
@@ -391,6 +393,8 @@ export default function AdminDashboard({ user }) {
             setStartDate={setStartDate}
             availableTickets={availableTickets}
             setAvailableTickets={setAvailableTickets}
+            maxPrice={maxPrice}            // ✅ pass current value
+            setMaxPrice={setMaxPrice}      // ✅ pass setter
           />
 
           <Box textAlign="right" mb={2}>
