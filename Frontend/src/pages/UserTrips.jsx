@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { fetchTrips, fetchTenTrips } from "../api/tripsApi";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { fetchTripsofUser } from "../api/userTripApi";
+import { fetchTripsofUser } from "../api/UserTripApi";
 import ProfileDialog from "../components/Profile";
 import TripFilters from "../components/TripFilters";
 import ChatButton from "../components/ChatButton";
