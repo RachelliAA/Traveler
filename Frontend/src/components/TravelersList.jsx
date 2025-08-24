@@ -113,9 +113,7 @@ export default function TravelersList({ tripId, tripName }) {
 
         // Pre-fill default message with trip info
         setMessage(
-          `Hello Travelers,\n\nThis is a notification for your trip ${tripName} (ID: ${tripId}).\nYou have booked ${
-            data.length
-          } tickets in total.\n\nThank you!`
+          `Hello Travelers,\n\nThis is a notification for your trip ${tripName} (ID: ${tripId}). we are excited to see you!\n\nThank you!`
         );
       } catch (err) {
         setError(err.message);
@@ -129,29 +127,78 @@ export default function TravelersList({ tripId, tripName }) {
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
+
   async function handleConfirmSend() {
-    const emails = travelers.map((t) => t.user_id?.email).filter(Boolean);
+  const emails = travelers.map((t) => t.user_id?.email).filter(Boolean);
 
-    if (emails.length === 0) {
-      alert("No valid emails found.");
-      return;
-    }
+  if (emails.length === 0) {
+    alert("No valid emails found.");
+    return;
+  }
 
-    try {
-      setSending(true);
-      const data = await sendEmail(emails, subject, message);
-      if (data.success) {
-        alert("Emails sent successfully!");
+  try {
+    setSending(true);
+    const data = await sendEmail(emails, subject, message);
+
+    if (data?.results && Array.isArray(data.results)) {
+      const failed = data.results.filter(r => !r.success);
+
+      if (failed.length === 0) {
+        alert("✅ Emails sent successfully!");
         setOpenDialog(false);
       } else {
-        alert("Failed to send emails: " + data.error);
+        alert(`⚠️ Some emails failed: ${failed.map(f => f.email).join(", ")}`);
       }
-    } catch (err) {
-      alert("Error sending emails: " + err.message);
-    } finally {
-      setSending(false);
+    } else {
+      console.log("Unexpected response:", data);
+      alert("⚠️ Unexpected response format from server");
     }
+  } catch (err) {
+    alert("Error sending emails: " + err.message);
+  } finally {
+    setSending(false);
   }
+}
+
+
+
+  // async function handleConfirmSend() {
+  //   const emails = travelers.map((t) => t.user_id?.email).filter(Boolean);
+
+  //   if (emails.length === 0) {
+  //     alert("No valid emails found.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setSending(true);
+  //     // const data = await sendEmail(emails, subject, message);
+  //     // if (data.success) {
+  //     //   alert("Emails sent successfully!");
+  //     //   setOpenDialog(false);
+  //     // } else {
+  //     //   alert("Failed to send emails: " + data.error);
+  //     // }
+  //     const data = await sendEmail(emails, subject, message);
+  //     console.log("Email API response:", data);
+  //     if (Array.isArray(data)) {
+  //       const failed = data.filter(r => !r.success);
+  //       if (failed.length === 0) {
+  //         alert("✅ Emails sent successfully!");
+  //         setOpenDialog(false);
+  //       } else {
+  //         alert(`⚠️ Some emails failed: ${failed.map(f => f.email).join(", ")}`);
+  //       }
+  //     } else {
+  //       alert("⚠️ Unexpected response from server");
+  //     }
+
+  //   } catch (err) {
+  //     alert("Error sending emails: " + err.message);
+  //   } finally {
+  //     setSending(false);
+  //   }
+  // }
 
   if (loading) return <CircularProgress />;
   if (error) return <Alert severity="error">{error}</Alert>;
