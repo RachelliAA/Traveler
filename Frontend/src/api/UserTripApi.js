@@ -3,21 +3,59 @@ const BASE_URL = 'http://localhost:5000/api/userTrips';
 import { updateTrip, fetchTripById } from "./tripsApi";
 
 
-export async function addUserToTrip(userTrip, trip) {
+export async function addUserToTrip(userTrip, trip, tickets) {
+  let firstAdd = false;
+  let toChange = null;
+
+try {
+  const response = await fetchUserTrip(userTrip.user_id, userTrip.trip_id);
+
+  if (response) {
+    // Not found → first add
+    toChange=response
+  }
+  else{
+    firstAdd = true;
+  }
+} catch (err) {
+  // Network or unexpected error → treat as first add
+  firstAdd = true;
+}
+
+if (!firstAdd) {
+  // Existing user trip → update it
+  changeTripOrder(toChange, trip, tickets);
+  return;
+}
+
+// First add → create new user trip
+
+
+  if (!firstAdd) {
+    // If the user already has a trip, change the order
+    changeTripOrder(toChange, trip, tickets);
+    return;
+  }
+
+  // If first add, create a new userTrip
   const res = await fetch(BASE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userTrip),
   });
+
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.error || 'Failed to add user to trip');
   }
-  //update trip to have one less spot available:
-  const newTrip={...trip, available_tickets: trip.available_tickets-userTrip.number_of_tickets}
-  const res2 = await updateTrip(newTrip._id, newTrip)
+
+  // Update trip to have fewer available tickets
+  const newTrip = { ...trip, available_tickets: trip.available_tickets - userTrip.number_of_tickets };
+  await updateTrip(trip._id, newTrip);
+
   return res.json();
 }
+
 async function fetchUserTripsofUser(user_id){
     const res = await fetch(`${BASE_URL}/user/${user_id}`);
   if (!res.ok) throw new Error('Failed to fetch user trips');
@@ -54,7 +92,9 @@ export async function changeTripOrder(usertrip, trip, tickets){
     const err = await res.json();
     throw new Error(err.error || 'Failed to update user trip');
   }
-  updateTrip(trip._id, trip)
+  const newTrip = { ...trip, available_tickets: trip.available_tickets - tickets };
+
+  updateTrip(trip._id, newTrip)
 }
 
 
