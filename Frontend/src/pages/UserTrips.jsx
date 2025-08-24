@@ -145,7 +145,7 @@ export default function TripsPage({}) {
               availableTickets={availableTickets}
               setAvailableTickets={setAvailableTickets}
               maxPrice={maxPrice}
-              setPrice={setPrice}
+              setMaxPrice={setPrice}
             />
 
             {/* Content */}

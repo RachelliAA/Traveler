@@ -37,10 +37,11 @@ router.post("/", async (req, res) => {
   try {
     const response = await client.chat.completions.create({
       model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+      //model:"deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
       messages: [
         {
           role: "system",
-          content: `You are a travel assistant. Here are the user's trips: ${context}`
+          content: `You are a travel assistant. respond like you are talking ot the customer, Here are the user's trips: ${context}`
         },
         {
           role: "user",

@@ -226,4 +226,43 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// POST adds a new trip
+router.post('/', async (req, res) => {
+  try {
+    const trip = await Trip.create(req.body);
+    res.status(201).json(trip);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// updates trip details by id
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid trip ID" });
+    }
+
+    const updatedTrip = await Trip.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedTrip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    res.json(updatedTrip);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// DELETE trip by id
+router.delete('/:id', async (req, res) => {
+  try {
+    await Trip.findByIdAndDelete(req.params.id);
+    res.json({ message: "Trip deleted" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 module.exports = router;

@@ -18,7 +18,7 @@ export default function Footer() {
     >
       <Container maxWidth="lg" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
         <Typography variant="body2" color="text.secondary">
-          © {new Date().getFullYear()} the Traveler. All rights reserved.
+          © {new Date().getFullYear()} The Traveler. All rights reserved.
         </Typography>
 
         <Box>

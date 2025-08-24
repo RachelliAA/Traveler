@@ -8,15 +8,16 @@ export default function TripFilters({
   availableTickets,
   setAvailableTickets,
   maxPrice,
-  setPrice
+  setMaxPrice
 }) {
   const handleClearFilters = () => {
     setFilterText("");
     setStartDate("");
     setAvailableTickets(0);
-    setPrice(500)
+    setMaxPrice(DEFAULT_MAX_PRICE); 
   };
 
+  const DEFAULT_MAX_PRICE = 500;
   return (
     <Box display="flex" gap={2} mb={2} flexWrap="wrap" alignItems="center">
       <TextField
@@ -53,9 +54,10 @@ export default function TripFilters({
         </Typography>
         <Slider
           value={maxPrice}
-          onChange={(e, val) => setPrice(val)}
+          onChange={(e, val) => setMaxPrice(val)}
           min={0}
           max={500} // adjust based on your data
+          step={10}
           valueLabelDisplay="auto"
         />
       </Box>

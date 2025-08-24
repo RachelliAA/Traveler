@@ -6,7 +6,10 @@ export default function RootPage() {
   const navigate = useNavigate();
 
   // Images for the background slideshow
-  const images = ["hike1.jpeg", "hike2.jpeg", "hike1.jpeg"];
+  const image1="https://media.gettyimages.com/id/1013777774/photo/red-canyon-eilat-israel.jpg?s=612x612&w=0&k=20&c=7y_4bIl1jLu5XNMzaNEOM_bRibVMNXm_CdLqPLc-kZM="
+  const image2="https://media.gettyimages.com/id/1739372937/photo/view-of-jerusalem-old-city.jpg?s=612x612&w=0&k=20&c=VIkvqYLjDjQ2u94Xvui60VJP8Y1mjVqYz2TK84NgGjA="
+  const image3="https://media.gettyimages.com/id/148706733/photo/sea-of-galilee-from-the-mount-of-beatitudes.jpg?s=612x612&w=0&k=20&c=O9TLi_A3L92swAN02tvHP6Q26DbDSlouuefwDaD9xEo="
+  const images = [image1, image2, image3];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -52,7 +55,7 @@ export default function RootPage() {
         }}
       >
         <Typography variant="h2" fontWeight="bold" gutterBottom>
-          Traveler Co.
+          The Traveler
         </Typography>
 
         <Stack spacing={2} direction="column" alignItems="center">
